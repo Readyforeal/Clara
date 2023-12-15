@@ -20,6 +20,7 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        //comment
         return [
             'name' => $this->faker->name(),
             'email' => 'test@test.com',
