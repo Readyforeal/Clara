@@ -8,10 +8,6 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-3">
-                <div class="mb-3 p-3 border">
-                    <p class="font-semibold">Session Info</p>
-                    <p>{{ json_encode(session()->all()) }}</p>
-                </div>
 
                 <div class="border p-3 mb-3">
                     <p class="font-semibold">Project Info</p>

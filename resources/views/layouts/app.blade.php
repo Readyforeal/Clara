@@ -32,7 +32,7 @@
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex">
                         <a href="/projects">Projects</a>
 
-                        @if(session()->has('project_id'))
+                        @if(session()->has('project'))
                         <a class="ml-2" href="/project/{{ session()->get('project_id') }}">Home</a>
                         <a class="ml-2" href="/selections">Selections</a>
                         @endif
@@ -45,8 +45,12 @@
                 {{ $slot }}
             </main>
 
-            <div class="fixed bottom-0 p-3">
-                <p>Project ID: {{ session()->get('project_id') }}</p>
+            <div class="fixed bottom-0 bg-white/70 p-3">
+                <p class="font-semibold">Session Info:</p>
+                <div class="flex text-xs">
+                    <p>Project: {{ session()->has('project') ? session()->get('project')->name : '' }}</p>
+                    <p class="ml-2">Selection List: {{ session()->has('selectionList') ? session()->get('selectionList')->name : '' }}</p>
+                </div>
             </div>
         </div>
 

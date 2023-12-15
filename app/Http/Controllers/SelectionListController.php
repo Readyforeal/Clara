@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
+use App\Models\SelectionList;
 
 class SelectionListController extends Controller
 {
@@ -12,11 +13,12 @@ class SelectionListController extends Controller
      */
     public function index()
     {
-        $project = Project::findOrFail(session()->get('project_id'));
+        //Forget session values
+        session()->forget('selectionList');
 
         return view('selections.indexSelectionLists', [
-            'project' => $project,
-            'selectionLists' => $project->selectionLists,
+            'project' => session('project'),
+            'selectionLists' => session('project')->selectionLists,
         ]);
     }
 
@@ -41,7 +43,13 @@ class SelectionListController extends Controller
      */
     public function show(string $id)
     {
-        //
+        //Set session values
+        session(['selectionList' => SelectionList::findOrFail($id)]);
+
+        return view('selections.showSelectionList', [
+            'project' => session('project'),
+            'selectionList' => session('selectionList'),
+        ]);
     }
 
     /**

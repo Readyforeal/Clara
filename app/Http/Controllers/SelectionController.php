@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Selection;
 use Illuminate\Http\Request;
 
 class SelectionController extends Controller
@@ -36,7 +37,10 @@ class SelectionController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('selections.showSelection', [
+            'selection' => Selection::findOrFail($id),
+            'project' => session('project'),
+        ]);
     }
 
     /**

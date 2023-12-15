@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SelectionListController;
+use App\Http\Controllers\SelectionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,4 +33,7 @@ Route::middleware([
     Route::get('/project/{id}', [ProjectController::class, 'show']);
 
     Route::get('/selections', [SelectionListController::class, 'index']);
+    Route::get('/selection-list/{id}', [SelectionListController::class, 'show']);
+
+    Route::get('/selection/{id}', [SelectionController::class, 'show']);
 });
