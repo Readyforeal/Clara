@@ -10,7 +10,9 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-3">
                 <p class="font-semibold mb-3">{{ $selectionList->name }}</p>
 
-                <div>
+                <a class="opacity-50 hover:opacity-100" href="/selection/create">Create Selection</a>
+
+                <div class="mt-3">
                     @foreach ($selectionList->selections as $selection)
                         <div class="flex text-xs py-1">
                             <a href="/selection/{{ $selection->id }}" class="font-semibold">{{ $selection->name }}</a>

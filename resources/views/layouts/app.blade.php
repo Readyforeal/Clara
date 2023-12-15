@@ -33,7 +33,7 @@
                         <a href="/projects">Projects</a>
 
                         @if(session()->has('project'))
-                        <a class="ml-2" href="/project/{{ session()->get('project_id') }}">Home</a>
+                        <a class="ml-2" href="/project/{{ session()->get('project')->id }}">Home</a>
                         <a class="ml-2" href="/selections">Selections</a>
                         @endif
                     </div>

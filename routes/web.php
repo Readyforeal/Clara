@@ -29,11 +29,13 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/projects', [ProjectController::class, 'index']);
-    Route::get('/project/{id}', [ProjectController::class, 'show']);
+    Route::get('/projects', [ProjectController::class, 'index'])->name('project.index');
+    Route::get('/project/{id}', [ProjectController::class, 'show'])->name('project.show');
 
-    Route::get('/selections', [SelectionListController::class, 'index']);
-    Route::get('/selection-list/{id}', [SelectionListController::class, 'show']);
+    Route::get('/selections', [SelectionListController::class, 'index'])->name('selectionList.index');
+    Route::get('/selection-list/{id}', [SelectionListController::class, 'show'])->name('selectionList.show');
 
-    Route::get('/selection/{id}', [SelectionController::class, 'show']);
+    Route::get('/selection/create', [SelectionController::class, 'create'])->name('selection.create');
+    Route::post('/selection/create', [SelectionController::class, 'store']);
+    Route::get('/selection/{id}', [SelectionController::class, 'show'])->name('selection.show');
 });

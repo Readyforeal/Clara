@@ -9,6 +9,8 @@ class Selection extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function selectionList() {
         return $this->belongsTo(SelectionList::class);
     }
