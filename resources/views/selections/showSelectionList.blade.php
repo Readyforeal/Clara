@@ -8,7 +8,10 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-3">
-                <p class="font-semibold mb-3">{{ $selectionList->name }}</p>
+
+                <a class="opacity-50 hover:opacity-100" href="/selection-list/{{ $selectionList->id }}/edit">Edit</a>
+
+                <p class="font-semibold my-3">{{ $selectionList->name }}</p>
 
                 <a class="opacity-50 hover:opacity-100" href="/selection/create">Create Selection</a>
 

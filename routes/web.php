@@ -34,11 +34,23 @@ Route::middleware([
     Route::get('/project/{id}', [ProjectController::class, 'show'])->name('project.show');
 
     Route::get('/selections', [SelectionListController::class, 'index'])->name('selectionList.index');
+    Route::get('/selection-list/create', [SelectionListController::class, 'create'])->name('selectionList.create');
+    Route::post('/selection-list/create', [SelectionListController::class, 'store']);
     Route::get('/selection-list/{id}', [SelectionListController::class, 'show'])->name('selectionList.show');
+    Route::get('/selection-list/{id}/edit', [SelectionListController::class, 'edit'])->name('selectionList.edit');
+    Route::patch('/selection-list/{id}/edit', [SelectionListController::class, 'update']);
+    Route::delete('/selection-list/{id}/delete', [SelectionListController::class, 'destroy']);
 
     Route::get('/selection/create', [SelectionController::class, 'create'])->name('selection.create');
     Route::post('/selection/create', [SelectionController::class, 'store']);
     Route::get('/selection/{id}', [SelectionController::class, 'show'])->name('selection.show');
+    Route::get('/selection/{id}/edit', [SelectionController::class, 'edit'])->name('selection.edit');
+    Route::patch('/selection/{id}/edit', [SelectionController::class, 'update']);
+    Route::delete('/selection/{id}/delete', [SelectionController::class, 'destroy']);
 
     Route::get('/item/create', [ItemController::class, 'create'])->name('item.create');
+    Route::post('/item/create', [ItemController::class, 'store']);
+    Route::get('/item/{id}/edit', [ItemController::class, 'edit'])->name('item.edit');
+    Route::patch('/item/{id}/edit', [ItemController::class, 'update']);
+    Route::delete('/item/{id}/delete', [ItemController::class, 'destroy']);
 });

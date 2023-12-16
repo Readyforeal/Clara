@@ -30,11 +30,19 @@
                         {{ $header }}
                     </div>
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex">
-                        <a href="/projects">Projects</a>
+                        <a class="opacity-50 hover:opacity-100" href="/projects">Projects</a>
 
-                        @if(session()->has('project'))
-                        <a class="ml-2" href="/project/{{ session()->get('project')->id }}">Home</a>
-                        <a class="ml-2" href="/selections">Selections</a>
+                        @if(session()->has('projectId'))
+                        <a class="opacity-50 hover:opacity-100 ml-4" href="/project/{{ session()->get('projectId') }}">Home</a>
+                        <a class="opacity-50 hover:opacity-100 ml-4" href="/selections">Selections</a>
+                        @endif
+
+                        @if(session()->has('selectionListId'))
+                        <a class="opacity-50 hover:opacity-100 ml-4" href="/selection-list/{{ session()->get('selectionListId') }}">Selection List</a>
+                        @endif
+
+                        @if(session()->has('selectionId'))
+                        <a class="opacity-50 hover:opacity-100 ml-4" href="/selection/{{ session()->get('selectionId') }}">Selection</a>
                         @endif
                     </div>
                 </header>
@@ -46,10 +54,27 @@
             </main>
 
             <div class="fixed bottom-0 bg-white/70 p-3">
-                <p class="font-semibold">Session Info:</p>
-                <div class="flex text-xs">
-                    <p>Project: {{ session()->has('project') ? session()->get('project')->name : '' }}</p>
-                    <p class="ml-2">Selection List: {{ session()->has('selectionList') ? session()->get('selectionList')->name : '' }}</p>
+                <p class="font-semibold">Session Info</p>
+                <div>
+                    <p>
+                        Project ID:
+                        <span class="font-semibold text-red-600">{{ session()->has('projectId') ? session('projectId') : '' }}</span>
+                    </p>
+
+                    <p>
+                        Selection List ID:
+                        <span class="font-semibold text-red-600">{{ session()->has('selectionListId') ? session('selectionListId') : '' }}</span>
+                    </p>
+
+                    <p>
+                        Selection ID:
+                        <span class="font-semibold text-red-600">{{ session()->has('selectionId') ? session('selectionId') : '' }}</span>
+                    </p>
+
+                    <p>
+                        Item ID:
+                        <span class="font-semibold text-red-600">{{ session()->has('itemId') ? session('itemId') : '' }}</span>
+                    </p>
                 </div>
             </div>
         </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Selection;
+use App\Models\SelectionList;
 use Illuminate\Http\Request;
 
 class SelectionController extends Controller
@@ -32,50 +33,23 @@ class SelectionController extends Controller
      */
     public function store(Request $request)
     {
+        //Validate form data
         $data = $request->validate([
-
-            //Selection
             'name' => 'required',
             'description' => '',
             'quantity' => '',
-            
-            //Item
-            // 'item_name' => 'required',
-            // 'item_number' => '',
-            // 'supplier' => '',
-            // 'link' => '',
-            // 'image' => '',
-            // 'length' => '',
-            // 'length_unit' => '',
-            // 'width' => '',
-            // 'width_unit' => '',
-            // 'height' => '',
-            // 'height_unit' => '',
-            // 'color' => '',
-            // 'notes' => ''
         ]);
 
+        //Get the selection list and create the selection
         $selectionList = SelectionList::findOrFail(session('selectionListId'));
         
         $selection = $selectionList->selections()->create([
-            'name' => $data['name'],
+            'name' => ucwords(strtolower($data['name'])),
             'description' => $data['description'],
             'quantity' => $data['quantity'],
         ]);
 
-        // $item = auth()->user()->currentTeam->items()->create([
-        //     'name' => $data['item_name'],
-        //     'item_number' => $data['item_number'],
-        //     'supplier' => $data['supplier'],
-        //     'link' => $data['link'],
-        //     'image' => isset($data['image']) ? $data['image'] : '',
-        //     'dimensions' => $data['length'] . (isset($data['length_unit']) ? $data['length_unit'] : '') . ' ' . $data['width'] . (isset($data['width_unit']) ? $data['width_unit'] : '') . ' ' . $data['height'] . (isset($data['height_unit']) ? $data['height_unit'] : ''),
-        //     'color' => $data['color'],
-        //     'notes' => $data['notes'],
-        // ]);
-
-        // $selection->items()->attach($item->id);
-
+        //Return to selection list view
         return to_route('selectionList.show', [
             'id' => $selectionList->id,
         ]);
@@ -86,6 +60,9 @@ class SelectionController extends Controller
      */
     public function show(string $id)
     {
+        //Forget scoped IDs
+        session()->forget(['itemId']);
+        
         //Set session values
         session(['selectionId' => $id]);
 
@@ -100,7 +77,10 @@ class SelectionController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('selections.editSelection', [
+            'project' => Project::findOrFail(session('projectId')),
+            'selection' => Selection::findOrFail($id),
+        ]);
     }
 
     /**
@@ -108,7 +88,23 @@ class SelectionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        //Validate fotm data
+        $data = $request->validate([
+            'name' => 'required',
+            'description' => '',
+            'quantity' => ''
+        ]);
+
+        //Get the selection we're updating and update the data
+        Selection::findOrFail($id)->update([
+            'name' => ucwords(strtolower($data['name'])),
+            'description' => $data['description'],
+            'quantity' => $data['quantity'],
+        ]);
+
+        return redirect()->route('selection.show', [
+            'id' => $id,
+        ]);
     }
 
     /**
@@ -116,6 +112,15 @@ class SelectionController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        //DEV NOTE:
+        //Selection is located via location_selection pivot
+        //  We will keep the location_selection record until permanent deletion
+        //Selection has items via item_selection pivot
+        //  We will keep the items in our database if we ever need them again unless otherwise specified, in which case we should prompt for item deletion
+        Selection::findOrFail($id)->delete();
+
+        return redirect()->route('selectionList.show', [
+            'id' => session('selectionListId'),
+        ]);
     }
 }
