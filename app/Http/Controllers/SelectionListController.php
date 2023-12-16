@@ -13,12 +13,14 @@ class SelectionListController extends Controller
      */
     public function index()
     {
-        //Forget session values
-        session()->forget('selectionList');
+        //Forget previous selection list id
+        session()->forget('selectionListId');
+
+        $project = Project::findOrFail(session('projectId'));
 
         return view('selections.indexSelectionLists', [
-            'project' => session('project'),
-            'selectionLists' => session('project')->selectionLists,
+            'project' => $project,
+            'selectionLists' => $project->selectionLists
         ]);
     }
 
@@ -44,11 +46,11 @@ class SelectionListController extends Controller
     public function show(string $id)
     {
         //Set session values
-        session(['selectionList' => SelectionList::findOrFail($id)]);
+        session(['selectionListId' => $id]);
 
         return view('selections.showSelectionList', [
-            'project' => session('project'),
-            'selectionList' => session('selectionList'),
+            'project' => Project::findOrFail(session('projectId')),
+            'selectionList' => SelectionList::findOrFail(session('selectionListId')),
         ]);
     }
 

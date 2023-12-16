@@ -14,6 +14,8 @@
                 @foreach ($selection->locations as $location)
                     <p class="mb-3">{{ $location->name }}</p>
                 @endforeach
+
+                    <a class="my-2 opacity-50 hover:opacity-100" href="/item/create">Create Item</a>
                 
                 @foreach ($selection->items as $item)
                     <div class="border p-3">

@@ -42,11 +42,11 @@ class ProjectController extends Controller
     public function show(string $id): View
     {
         //Set session values
-        session(['project' => Project::findOrFail($id)]);
+        session(['projectId' => $id]);
 
         //Return the view
         return view('projects.showProject', [
-            'project' => session('project'),
+            'project' => Project::findOrFail(session('projectId')),
         ]);
     }
 

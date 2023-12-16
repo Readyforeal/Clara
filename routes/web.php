@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SelectionListController;
 use App\Http\Controllers\SelectionController;
+use App\Http\Controllers\ItemController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,4 +39,6 @@ Route::middleware([
     Route::get('/selection/create', [SelectionController::class, 'create'])->name('selection.create');
     Route::post('/selection/create', [SelectionController::class, 'store']);
     Route::get('/selection/{id}', [SelectionController::class, 'show'])->name('selection.show');
+
+    Route::get('/item/create', [ItemController::class, 'create'])->name('item.create');
 });

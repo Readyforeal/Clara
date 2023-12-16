@@ -22,8 +22,8 @@ class SelectionController extends Controller
     public function create()
     {
         return view('selections.createSelection', [
-            'project' => session('project'),
-            'selectionList' => session('selectionList'),
+            'project' => Project::findOrFail(session('projectId')),
+            'selectionList' => SelectionList::findOrFail(session('selectionListId')),
         ]);
     }
 
@@ -40,22 +40,22 @@ class SelectionController extends Controller
             'quantity' => '',
             
             //Item
-            'item_name' => 'required',
-            'item_number' => '',
-            'supplier' => '',
-            'link' => '',
-            'image' => '',
-            'length' => '',
-            'length_unit' => '',
-            'width' => '',
-            'width_unit' => '',
-            'height' => '',
-            'height_unit' => '',
-            'color' => '',
-            'notes' => ''
+            // 'item_name' => 'required',
+            // 'item_number' => '',
+            // 'supplier' => '',
+            // 'link' => '',
+            // 'image' => '',
+            // 'length' => '',
+            // 'length_unit' => '',
+            // 'width' => '',
+            // 'width_unit' => '',
+            // 'height' => '',
+            // 'height_unit' => '',
+            // 'color' => '',
+            // 'notes' => ''
         ]);
 
-        $selectionList = session('selectionList');
+        $selectionList = SelectionList::findOrFail(session('selectionListId'));
         
         $selection = $selectionList->selections()->create([
             'name' => $data['name'],
@@ -63,18 +63,18 @@ class SelectionController extends Controller
             'quantity' => $data['quantity'],
         ]);
 
-        $item = auth()->user()->currentTeam->items()->create([
-            'name' => $data['item_name'],
-            'item_number' => $data['item_number'],
-            'supplier' => $data['supplier'],
-            'link' => $data['link'],
-            'image' => isset($data['image']) ? $data['image'] : '',
-            'dimensions' => $data['length'] . (isset($data['length_unit']) ? $data['length_unit'] : '') . ' ' . $data['width'] . (isset($data['width_unit']) ? $data['width_unit'] : '') . ' ' . $data['height'] . (isset($data['height_unit']) ? $data['height_unit'] : ''),
-            'color' => $data['color'],
-            'notes' => $data['notes'],
-        ]);
+        // $item = auth()->user()->currentTeam->items()->create([
+        //     'name' => $data['item_name'],
+        //     'item_number' => $data['item_number'],
+        //     'supplier' => $data['supplier'],
+        //     'link' => $data['link'],
+        //     'image' => isset($data['image']) ? $data['image'] : '',
+        //     'dimensions' => $data['length'] . (isset($data['length_unit']) ? $data['length_unit'] : '') . ' ' . $data['width'] . (isset($data['width_unit']) ? $data['width_unit'] : '') . ' ' . $data['height'] . (isset($data['height_unit']) ? $data['height_unit'] : ''),
+        //     'color' => $data['color'],
+        //     'notes' => $data['notes'],
+        // ]);
 
-        $selection->items()->attach($item->id);
+        // $selection->items()->attach($item->id);
 
         return to_route('selectionList.show', [
             'id' => $selectionList->id,
@@ -86,9 +86,12 @@ class SelectionController extends Controller
      */
     public function show(string $id)
     {
+        //Set session values
+        session(['selectionId' => $id]);
+
         return view('selections.showSelection', [
-            'project' => session('project'),
-            'selection' => Selection::findOrFail($id),
+            'project' => Project::findOrFail(session('projectId')),
+            'selection' => Selection::findOrFail(session('selectionId')),
         ]);
     }
 
