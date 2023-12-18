@@ -5,11 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'Laravel') }} {{ session()->has('projectName') ? ' - ' . session('projectName') : '' }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <script src="https://kit.fontawesome.com/210158a457.js" crossorigin="anonymous"></script>
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -20,7 +21,7 @@
     <body class="font-sans antialiased">
         <x-banner />
 
-        <div class="min-h-screen bg-white">
+        <div class="max-h-[calc(100vh-156px)] bg-white">
             @livewire('navigation-menu')
 
             {{-- Project Navigation --}}
@@ -30,58 +31,23 @@
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="{{ session()->has('projectId') ? 'ml-[300px]' : '' }} mt-14 bg-white shadow">
-                    <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <header class="{{ session()->has('projectId') ? 'ml-[300px]' : '' }} mt-14 bg-white">
+                    <div class="mx-auto p-6">
                         {{ $header }}
-                    </div>
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex">
-                        <a class="opacity-50 hover:opacity-100" href="/projects">Projects</a>
-
-                        @if(session()->has('projectId'))
-                        <a class="opacity-50 hover:opacity-100 ml-4" href="/project/{{ session()->get('projectId') }}">Home</a>
-                        <a class="opacity-50 hover:opacity-100 ml-4" href="/selections">Selections</a>
-                        @endif
-
-                        @if(session()->has('selectionListId'))
-                        <a class="opacity-50 hover:opacity-100 ml-4" href="/selection-list/{{ session()->get('selectionListId') }}">Selection List</a>
-                        @endif
-
-                        @if(session()->has('selectionId'))
-                        <a class="opacity-50 hover:opacity-100 ml-4" href="/selection/{{ session()->get('selectionId') }}">Selection</a>
-                        @endif
+                        <div class="mt-2 inline-flex">
+                            @if(session()->has('selectionListId'))
+                                <i class="fa fa-chevron-right mt-1 mx-2"></i><p>Selection Lists</p>
+                            @endif
+                        </div>
                     </div>
                 </header>
             @endif
 
             <!-- Page Content -->
-            <main class="{{ session()->has('projectId') ? 'ml-[300px]' : '' }} ">
+            <main class="{{ session()->has('projectId') ? 'ml-[300px]' : '' }}">
                 {{ $slot }}
             </main>
 
-            <div class="fixed bottom-0 p-3 opacity-10 hover:opacity-100">
-                <p class="font-semibold">Session Info</p>
-                <div>
-                    <p>
-                        Project ID:
-                        <span class="font-semibold text-red-600">{{ session()->has('projectId') ? session('projectId') : '' }}</span>
-                    </p>
-
-                    <p>
-                        Selection List ID:
-                        <span class="font-semibold text-red-600">{{ session()->has('selectionListId') ? session('selectionListId') : '' }}</span>
-                    </p>
-
-                    <p>
-                        Selection ID:
-                        <span class="font-semibold text-red-600">{{ session()->has('selectionId') ? session('selectionId') : '' }}</span>
-                    </p>
-
-                    <p>
-                        Item ID:
-                        <span class="font-semibold text-red-600">{{ session()->has('itemId') ? session('itemId') : '' }}</span>
-                    </p>
-                </div>
-            </div>
         </div>
 
         @stack('modals')
