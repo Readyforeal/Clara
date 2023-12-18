@@ -23,6 +23,9 @@
         <div class="min-h-screen bg-gray-100">
             @livewire('navigation-menu')
 
+            {{-- Project Navigation --}}
+            @livewire('project-sidebar')
+
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white shadow">

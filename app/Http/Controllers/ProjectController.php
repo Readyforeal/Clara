@@ -25,7 +25,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        return view('projects.createProject');
     }
 
     /**
@@ -33,7 +33,30 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Validate form data
+        $data = $request->validate([
+            'name' => 'required',
+            'street' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'zip' => 'required',
+            'description' => ''
+        ]);
+
+        //Get the current team and create the project
+        $project = auth()->user()->currentTeam->projects()->create([
+            'name' => ucwords(strtolower($data['name'])),
+            'street' => ucwords(strtolower($data['street'])),
+            'city' => ucwords(strtolower($data['city'])),
+            'state' => ucwords(strtolower($data['state'])),
+            'zip' => ucwords(strtolower($data['zip'])),
+            'description' => $data['description'],
+        ]);
+
+        //Go to project home
+        return redirect()->route('project.show', [
+            'id' =>$project->id,
+        ]);
     }
 
     /**
@@ -49,7 +72,7 @@ class ProjectController extends Controller
 
         //Return the view
         return view('projects.showProject', [
-            'project' => Project::findOrFail(session('projectId')),
+            'project' => Project::findOrFail($id),
         ]);
     }
 
@@ -58,7 +81,9 @@ class ProjectController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('projects.editProject', [
+            'project' => Project::findOrFail($id),
+        ]);
     }
 
     /**
@@ -66,7 +91,20 @@ class ProjectController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required',
+            'street' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'zip' => 'required',
+            'description' => ''
+        ]);
+
+        Project::findOrFail($id)->update($data);
+
+        return redirect()->route('project.show', [
+            'id' => $id,
+        ]);
     }
 
     /**
@@ -74,6 +112,14 @@ class ProjectController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $project = Project::findOrFail($id);
+        foreach($project->selectionLists() as $selectionList) {
+            $selectionList->selections()->delete;
+            $selectionList->delete();
+        }
+        $project->selectionLists()->delete();
+        $project->delete();
+
+        return redirect()->route('project.index');
     }
 }

@@ -31,7 +31,12 @@ Route::middleware([
     })->name('dashboard');
 
     Route::get('/projects', [ProjectController::class, 'index'])->name('project.index');
+    Route::get('/project/create', [ProjectController::class, 'create'])->name('project.create');
+    Route::post('/project/create', [ProjectController::class, 'store']);
     Route::get('/project/{id}', [ProjectController::class, 'show'])->name('project.show');
+    Route::get('/project/{id}/edit', [ProjectController::class, 'edit'])->name('project.edit');
+    Route::patch('/project/{id}/edit', [ProjectController::class, 'update']);
+    Route::delete('/project/{id}/delete', [ProjectController::class, 'destroy']);
 
     Route::get('/selections', [SelectionListController::class, 'index'])->name('selectionList.index');
     Route::get('/selection-list/create', [SelectionListController::class, 'create'])->name('selectionList.create');
