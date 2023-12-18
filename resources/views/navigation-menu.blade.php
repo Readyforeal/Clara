@@ -1,12 +1,13 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="fixed top-0 w-full bg-white border-b border-gray-300 z-10">
     <!-- Primary Navigation Menu -->
-    <div class="mx-auto px-3">
+    <div class="mx-auto px-6">
         <div class="flex justify-between h-14">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-mark class="block h-9 w-auto" />
+                    <a class="text-xl font-semibold text-blue-600" href="{{ route('dashboard') }}">
+                        Clara
+                        {{-- <x-application-mark class="block h-9 w-auto" /> --}}
                     </a>
                 </div>
 

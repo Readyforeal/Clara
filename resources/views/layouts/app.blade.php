@@ -20,16 +20,18 @@
     <body class="font-sans antialiased">
         <x-banner />
 
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen bg-white">
             @livewire('navigation-menu')
 
             {{-- Project Navigation --}}
-            @livewire('project-sidebar')
+            @if(session()->has('projectId'))
+                @livewire('project-sidebar')
+            @endif
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <header class="{{ session()->has('projectId') ? 'ml-[300px]' : '' }} mt-14 bg-white shadow">
+                    <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex">
@@ -52,11 +54,11 @@
             @endif
 
             <!-- Page Content -->
-            <main>
+            <main class="{{ session()->has('projectId') ? 'ml-[300px]' : '' }} ">
                 {{ $slot }}
             </main>
 
-            <div class="fixed bottom-0 bg-white/70 p-3">
+            <div class="fixed bottom-0 p-3 opacity-10 hover:opacity-100">
                 <p class="font-semibold">Session Info</p>
                 <div>
                     <p>
