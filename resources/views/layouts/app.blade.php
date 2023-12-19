@@ -31,14 +31,21 @@
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="{{ session()->has('projectId') ? 'ml-[300px]' : '' }} mt-14 bg-white">
+                <header class="{{ session()->has('projectId') ? 'ml-[300px]' : '' }} mt-14 border-b border-gray-300 bg-white">
                     <div class="mx-auto p-6">
                         {{ $header }}
-                        <div class="mt-2 inline-flex">
-                            @if(session()->has('selectionListId'))
-                                <i class="fa fa-chevron-right mt-1 mx-2"></i><p>Selection Lists</p>
+                        
+                        {{-- Selections --}}
+                        @if(session()->has('selectionListId'))
+                        <div class="mt-1 inline-flex text-xs">
+                            <a class="opacity-50 hover:opacity-100 transition ease-in-out" href="/selections">Selection Lists</a>
+                            @if (session()->has('selectionId'))
+                                <i class="fa fa-chevron-right mx-2 mt-1"></i><a class="opacity-50 hover:opacity-100 transition ease-in-out" href="/selection-list/{{ session('selectionListId') }}">{{ session('selectionListName') }}</a>
                             @endif
                         </div>
+                        @endif
+
+
                     </div>
                 </header>
             @endif
