@@ -2,7 +2,7 @@
     <div class="w-full h-full bg-white border-r border-gray-300">
         <div class="h-full flex flex-col">
             {{-- Project information --}}
-            <div class="p-6 border-b border-gray-100">
+            <div class="px-6 mt-6">
                 <p class="text-xl font-semibold">{{ $project->name }}</p>
                 <p class="text-xs">{{ $project->street }}</p>
                 <p class="text-xs">{{ $project->city }}, {{ $project->state }} {{ $project->zip }}</p>
