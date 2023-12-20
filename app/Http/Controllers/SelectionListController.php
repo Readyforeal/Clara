@@ -16,6 +16,8 @@ class SelectionListController extends Controller
         //Forget scoped IDs
         session()->forget(['selectionListId', 'selectionListName', 'selectionId']);
 
+        session(['feature' => 'selections']);
+
         $project = Project::findOrFail(session('projectId'));
 
         return view('selections.indexSelectionLists', [
@@ -69,12 +71,14 @@ class SelectionListController extends Controller
 
         //Set session values
         session([
+            'projectId' => $selectionList->project->id,
+            'projectName' => $selectionList->project->name,
             'selectionListId' => $selectionList->id,
             'selectionListName' => $selectionList->name
         ]);
 
         return view('selections.showSelectionList', [
-            'project' => Project::findOrFail(session('projectId')),
+            'project' => $selectionList->project,
             'selectionList' => $selectionList,
         ]);
     }

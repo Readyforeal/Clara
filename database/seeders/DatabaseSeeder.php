@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         \App\Models\Team::factory(1)->create();
         $projects = \App\Models\Project::factory(2)->create();
+        $approvalStages = \App\Models\ApprovalStage::factory(2)->create();
         $categories = \App\Models\Category::factory(5)->create();
         $locations = \App\Models\Location::factory()->count(8)->sequence(
             ['project_id' => 1, 'name' => 'Master Bath'],

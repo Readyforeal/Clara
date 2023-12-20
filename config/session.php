@@ -6,6 +6,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Session values library
+    |--------------------------------------------------------------------------
+    
+    These are the values we are storing in the session
+    
+    "feature" => ie. "selections", "estimating", "proposals", "administration",
+    "projectId",
+    "projectName",
+    "selectionListId",
+    "selectionListName",
+    "selectionId",
+    "itemId",
+    
+    */
+
+    /*
+    |--------------------------------------------------------------------------
     | Default Session Driver
     |--------------------------------------------------------------------------
     |

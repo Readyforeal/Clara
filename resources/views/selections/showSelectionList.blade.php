@@ -1,34 +1,31 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ $project->name }}
+            Selections
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-3">
+    <div class="p-6">
+        <div class="p-3 bg-white border border-gray-300 rounded-md overflow-hidden">
+            <a class="opacity-50 hover:opacity-100" href="/selection-list/{{ $selectionList->id }}/edit">Edit</a>
 
-                <a class="opacity-50 hover:opacity-100" href="/selection-list/{{ $selectionList->id }}/edit">Edit</a>
+            <p class="font-semibold my-3">{{ $selectionList->name }}</p>
 
-                <p class="font-semibold my-3">{{ $selectionList->name }}</p>
+            <x-button-link icon="plus" url="/selection/create">Create</x-button-link>
 
-                <a class="opacity-50 hover:opacity-100" href="/selection/create">Create Selection</a>
-
-                <div class="mt-3">
-                    @foreach ($selectionList->selections as $selection)
-                        <div class="flex text-xs py-1">
-                            <a href="/selection/{{ $selection->id }}" class="font-semibold">{{ $selection->name }}</a>
-                            <p class="ml-2">
-                                @forelse ($selection->items as $item)
-                                    {{ $item->name }}
-                                @empty
-                                    <span class="text-yellow-600">Selection Needed</span>
-                                @endforelse
-                            </p>
-                        </div>
-                    @endforeach
-                </div>
+            <div class="mt-3">
+                @foreach ($selectionList->selections as $selection)
+                    <div class="flex text-xs py-1">
+                        <a href="/selection/{{ $selection->id }}" class="font-semibold">{{ $selection->name }}</a>
+                        <p class="ml-2">
+                            @forelse ($selection->items as $item)
+                                {{ $item->name }}
+                            @empty
+                                <span class="text-yellow-600">Selection Needed</span>
+                            @endforelse
+                        </p>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>

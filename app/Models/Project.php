@@ -23,6 +23,10 @@ class Project extends Model
         return $this->hasMany(SelectionList::class);
     }
 
+    public function approvalStages() {
+        return $this->hasMany(ApprovalStage::class);
+    }
+
     //Pivot
     public function categories() {
         return $this->belongsToMany(Category::class);

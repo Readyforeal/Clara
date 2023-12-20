@@ -32,12 +32,12 @@
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="{{ session()->has('projectId') ? 'ml-[300px]' : '' }} mt-14 border-b border-gray-300 bg-white">
-                    <div class="mx-auto p-6">
+                    <div class="mx-auto px-6 py-3">
                         {{ $header }}
                         
                         {{-- Selections --}}
                         @if(session()->has('selectionListId'))
-                        <div class="mt-1 inline-flex text-xs">
+                        <div class="inline-flex text-xs">
                             <a class="opacity-50 hover:opacity-100 transition ease-in-out" href="/selections">Selection Lists</a>
                             @if (session()->has('selectionId'))
                                 <i class="fa fa-chevron-right mx-2 mt-1"></i><a class="opacity-50 hover:opacity-100 transition ease-in-out" href="/selection-list/{{ session('selectionListId') }}">{{ session('selectionListName') }}</a>
@@ -54,6 +54,10 @@
             <main class="{{ session()->has('projectId') ? 'ml-[300px]' : '' }}">
                 {{ $slot }}
             </main>
+
+            <div class="fixed w-full p-3 bottom-0 ml-[300px] opacity-10 hover:opacity-100">
+                <p>{{ var_export(session()->all()) }}</p>
+            </div>
 
         </div>
 
