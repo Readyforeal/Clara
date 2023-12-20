@@ -1,15 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl">
             Selections
         </h2>
     </x-slot>
 
-    <div class="p-6">
+    <div class="px-6">
         <div class="max-w-1/2">
-
-            <x-secondary-button-link class="mb-3" icon="arrow-left" url="/project/{{ $project->id }}">Back</x-secondary-button-link>
-
             <div class="p-3 bg-white border border-gray-300 shadow-md rounded-md overflow-hidden">
                 <p class="text-xl font-semibold">Selection Lists</p>
     

@@ -31,7 +31,7 @@
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="{{ session()->has('projectId') ? 'ml-[300px]' : '' }} mt-14 border-b border-gray-300 bg-white">
+                <header class="{{ session()->has('projectId') ? 'ml-[300px]' : '' }} mt-14 bg-white">
                     <div class="mx-auto px-6 py-3">
                         {{ $header }}
                         
