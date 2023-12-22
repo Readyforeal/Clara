@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Project;
 
 class ApprovalStageController extends Controller
 {
@@ -11,7 +12,15 @@ class ApprovalStageController extends Controller
      */
     public function index()
     {
-        //
+        //Forget scoped session values
+        session()->forget(['selectionListId', 'selectionListName', 'selectionId']);
+
+        $project = Project::findOrFail(session('projectId'));
+
+        return view('approvals.indexApprovalStages', [
+            'project' => $project,
+            'approvalStages' => $project->approvalStages,
+        ]);
     }
 
     /**

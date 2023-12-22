@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project;
 use Illuminate\Http\Request;
+use App\Models\Project;
 use App\Models\SelectionList;
 
 class SelectionListController extends Controller
@@ -15,7 +15,6 @@ class SelectionListController extends Controller
     {
         //Forget scoped IDs
         session()->forget(['selectionListId', 'selectionListName', 'selectionId']);
-
         session(['feature' => 'selections']);
 
         $project = Project::findOrFail(session('projectId'));

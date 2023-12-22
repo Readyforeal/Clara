@@ -17,26 +17,26 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'team_id' => 1,
-            'name' => fake()->randomElement([
-                'Footings and Foundations',
-                'Masonry',
-                'Retaining Walls and Pavers',
-                'Building Materials',
-                'Windows and Exterior Doors',
-                'Garage Doors',
-                'AV, Security, and Low Voltage',
-                'Electrical',
-                'Plumbing',
-                'Countertops',
-                'Cabinets',
-                'Appliances',
-                'Tile Material',
-                'Wood Flooring',
-                'Shower Door, Glass, and Mirrors',
-                'Carpet and Exercise Flooring',
-                'Hardware',
-            ]),
+            // 'team_id' => 1,
+            // 'name' => fake()->randomElement([
+            //     'Footings and Foundations',
+            //     'Masonry',
+            //     'Retaining Walls and Pavers',
+            //     'Building Materials',
+            //     'Windows and Exterior Doors',
+            //     'Garage Doors',
+            //     'AV, Security, and Low Voltage',
+            //     'Electrical',
+            //     'Plumbing',
+            //     'Countertops',
+            //     'Cabinets',
+            //     'Appliances',
+            //     'Tile Material',
+            //     'Wood Flooring',
+            //     'Shower Door, Glass, and Mirrors',
+            //     'Carpet and Exercise Flooring',
+            //     'Hardware',
+            // ]),
         ];
     }
 }

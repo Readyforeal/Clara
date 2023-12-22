@@ -4,6 +4,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SelectionListController;
 use App\Http\Controllers\SelectionController;
 use App\Http\Controllers\ItemController;
+use App\Http\COntrollers\ApprovalStageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -58,4 +59,7 @@ Route::middleware([
     Route::get('/item/{id}/edit', [ItemController::class, 'edit'])->name('item.edit');
     Route::patch('/item/{id}/edit', [ItemController::class, 'update']);
     Route::delete('/item/{id}/delete', [ItemController::class, 'destroy']);
+
+    Route::get('/approvals', [ApprovalStageController::class, 'index'])->name('approvalStages.index');
+    Route::get('/approval-stage/{id}', [ApprovalStageController::class, 'show'])->name('approvalStage.show');
 });

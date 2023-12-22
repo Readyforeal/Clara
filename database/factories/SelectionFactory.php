@@ -17,7 +17,7 @@ class SelectionFactory extends Factory
     public function definition(): array
     {
         return [
-            'selection_list_id' => random_int(1, 2),
+            'selection_list_id' => 1,
             'name' => fake()->word(),
             'description' => fake()->sentence(),
             'quantity' => random_int(1, 10),
