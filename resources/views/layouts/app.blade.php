@@ -32,7 +32,7 @@
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="{{ session()->has('projectId') ? 'ml-[300px]' : '' }} mt-14 bg-white">
-                    <div class="mx-auto px-6 py-3">
+                    <div class="mx-auto p-6">
                         {{ $header }}
                         
                         {{-- Selections --}}

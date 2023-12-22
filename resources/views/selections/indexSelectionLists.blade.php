@@ -1,16 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl">
-            Selections
+            Selection Lists
         </h2>
     </x-slot>
 
     <div class="px-6">
         <div class="max-w-1/2">
-            <div class="p-3 bg-white border border-gray-300 shadow-md rounded-md overflow-hidden">
-                <p class="text-xl font-semibold">Selection Lists</p>
-    
-                <x-button-link icon="plus" url="/selection-list/create" class="mt-3 mb-1">Create</x-button-link>
+            <div class="p-3 bg-white border border-gray-300 shadow-md rounded-md overflow-hidden">    
+                <x-button-link icon="plus" url="/selection-list/create" class="mb-1">Create</x-button-link>
                 
                 @foreach ($selectionLists as $selectionList)
                     <a class="mt-2 flex group justify-between border border-gray-300 rounded-md p-3 bg-white hover:bg-gray-100 opacity-70 hover:opacity-100 transition ease-in-out" href="/selection-list/{{ $selectionList->id }}">

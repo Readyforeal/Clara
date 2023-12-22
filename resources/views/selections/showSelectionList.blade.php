@@ -1,19 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Selections
+        <h2 class="font-semibold text-xl text-gray-800">
+            {{ $selectionList->name }}
         </h2>
     </x-slot>
 
     <div class="px-6">
         <div class="flex justify-between">
-            <x-secondary-button-link icon="arrow-left" url="/selections">Back</x-secondary-button-link>
             <x-secondary-button-link icon="pen" url="/selection-list/{{ $selectionList->id }}/edit">Edit Selection List</x-secondary-button-link>
         </div>
 
         <div class="mt-3 p-3 bg-white border border-gray-300 rounded-md overflow-hidden">
-            <p class="font-semibold mb-3">{{ $selectionList->name }}</p>
-
             <x-button-link icon="plus" url="/selection/create">Create Selection</x-button-link>
 
             <div class="mt-3">
