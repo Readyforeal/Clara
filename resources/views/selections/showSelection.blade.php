@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ $selection->name }}
+        <h2 class="font-semibold text-xl">
+            Selection
         </h2>
     </x-slot>
 
@@ -24,7 +24,7 @@
                         </x-select>
                     </div>
 
-                    <x-button class="mt-2" icon="thumbs-up" color="blue">Stage for Approval</x-button>
+                    <x-button class="mt-2" icon="list-check" color="blue">Stage for Approval</x-button>
                 </form>
 
                 @foreach ($selection->approvals as $approval)

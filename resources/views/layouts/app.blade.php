@@ -41,9 +41,9 @@
                         <div class="inline-flex text-xs">
                             <a class="opacity-50 hover:opacity-100 transition ease-in-out" href="/selection-lists">Selection Lists</a>
                             @if (session()->has('roadmap.project.selectionList.selection'))
-                                <i class="fa fa-chevron-right mx-2 mt-1"></i>
+                                <i class="fa fa-chevron-right mx-2 mt-[2px]"></i>
                                 <a class="opacity-50 hover:opacity-100 transition ease-in-out" href="/selection-lists/{{ session('roadmap.project.selectionList.selectionListId') }}">
-                                    {{ session('roadmap.project.selectionList.selectionListName') }}    
+                                    <i class="fa fa-table-list mr-2 mt-[0px]"></i>{{ session('roadmap.project.selectionList.selectionListName') }}    
                                 </a>
                             @endif
                         </div>

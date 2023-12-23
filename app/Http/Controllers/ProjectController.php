@@ -104,7 +104,7 @@ class ProjectController extends Controller
 
         Project::findOrFail($id)->update($data);
 
-        return redirect()->route('project.show', [
+        return redirect()->route('projects.show', [
             'id' => $id,
         ]);
     }

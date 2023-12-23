@@ -13,7 +13,7 @@
                 <p class="text-xs mb-3">Fields marked with * are required</p>
 
                 {{-- Make form into component --}}
-                <form action="/project/create" method="POST">
+                <form action="/projects/create" method="POST">
                     @csrf
 
                     <div class="mt-2">

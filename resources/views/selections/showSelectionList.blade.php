@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800">
+        <h2 class="font-semibold text-xl">
             <i class="fa fa-table-list mr-2"></i>Selection List
         </h2>
     </x-slot>

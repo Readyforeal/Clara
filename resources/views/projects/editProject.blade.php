@@ -13,7 +13,7 @@
                 <p class="text-xs mb-3">Fields marked with * are required</p>
 
                 {{-- Make form into component --}}
-                <form action="/project/{{ $project->id }}/edit" method="POST">
+                <form action="/projects/{{ $project->id }}/edit" method="POST">
                     @csrf
                     @method('PATCH')
 
@@ -51,7 +51,7 @@
                     
                 </form>
 
-                <form class="mt-3" action="/project/{{ $project->id }}/delete" method="POST">
+                <form class="mt-3" action="/projects/{{ $project->id }}/delete" method="POST">
                     @csrf
                     @method('DELETE')
                     <x-button>Delete</x-button>
