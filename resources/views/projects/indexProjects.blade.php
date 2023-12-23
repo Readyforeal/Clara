@@ -8,9 +8,9 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-3">
-                <a class="mb-3 opacity-50 hover:opacity-100" href="/project/create">Create</a>
+                <a class="mb-3 opacity-50 hover:opacity-100" href="/projects/create">Create</a>
                 @foreach ($projects as $project)
-                    <p><a href="/project/{{ $project->id }}">{{ $project->name }}</a></p>
+                    <p><a href="/projects/{{ $project->id }}">{{ $project->name }}</a></p>
                 @endforeach
             </div>
         </div>

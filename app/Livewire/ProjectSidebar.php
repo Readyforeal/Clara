@@ -10,7 +10,7 @@ class ProjectSidebar extends Component
     public $project;
 
     public function mount() {
-        $this->project = Project::findOrFail(session()->get('projectId'));
+        $this->project = Project::findOrFail(session()->get('roadmap.project.projectId'));
     }
 
     public function render()

@@ -12,7 +12,7 @@
             <p class="text-xs mb-3">Fields marked with * are required</p>
 
             {{-- Make form into component --}}
-            <form action="/selection-list/create" method="POST">
+            <form action="/selection-lists/create" method="POST">
                 @csrf
 
                 <div class="mt-2">
@@ -20,7 +20,7 @@
                     <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
                 </div>
 
-                <x-button class="mt-2">Create</x-button>
+                <x-button class="mt-2" icon="arrow-right" color="blue">Create</x-button>
                 
             </form>
         </div>

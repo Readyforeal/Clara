@@ -12,27 +12,24 @@ class SelectionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
+    public function index() {
         //
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
+    public function create() {
         return view('selections.createSelection', [
-            'project' => Project::findOrFail(session('projectId')),
-            'selectionList' => SelectionList::findOrFail(session('selectionListId')),
+            'project' => Project::findOrFail(session('roadmap.project.projectId')),
+            'selectionList' => SelectionList::findOrFail(session('roadmap.project.selectionList.selectionListId')),
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         //Validate form data
         $data = $request->validate([
             'name' => 'required',
@@ -41,7 +38,7 @@ class SelectionController extends Controller
         ]);
 
         //Get the selection list and create the selection
-        $selectionList = SelectionList::findOrFail(session('selectionListId'));
+        $selectionList = SelectionList::findOrFail(session('roadmap.project.selectionList.selectionListId'));
         
         $selection = $selectionList->selections()->create([
             'name' => ucwords(strtolower($data['name'])),
@@ -50,35 +47,40 @@ class SelectionController extends Controller
         ]);
 
         //Return to selection list view
-        return to_route('selectionList.show', [
+        return to_route('selectionLists.show', [
             'id' => $selectionList->id,
-        ]);
+        ])->with('message', ['type' => 'success', 'body' => 'Selection successfully created']);;
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
+    public function show(string $id) {
         //Forget scoped IDs
-        session()->forget(['itemId']);
+        session()->forget(['roadmap.project.selectionList.selection.item']);
+
+        $selection = Selection::findOrFail($id);
         
         //Set session values
-        session(['selectionId' => $id]);
+        session([
+            'roadmap.project.selectionList.selection' => [
+                'selectionId' => $selection->id,
+                'selectionName' => $selection->name
+            ]
+        ]);
 
         return view('selections.showSelection', [
-            'project' => Project::findOrFail(session('projectId')),
-            'selection' => Selection::findOrFail(session('selectionId')),
+            'project' => Project::findOrFail(session('roadmap.project.projectId')),
+            'selection' => $selection,
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
+    public function edit(string $id) {
         return view('selections.editSelection', [
-            'project' => Project::findOrFail(session('projectId')),
+            'project' => Project::findOrFail(session('roadmap.project.projectId')),
             'selection' => Selection::findOrFail($id),
         ]);
     }
@@ -86,8 +88,7 @@ class SelectionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
+    public function update(Request $request, string $id) {
         //Validate fotm data
         $data = $request->validate([
             'name' => 'required',
@@ -102,25 +103,31 @@ class SelectionController extends Controller
             'quantity' => $data['quantity'],
         ]);
 
-        return redirect()->route('selection.show', [
+        return redirect()->route('selections.show', [
             'id' => $id,
-        ]);
+        ])->with('message', ['type' => 'success', 'body' => 'Selection successfully updated']);;
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
+    public function destroy(string $id) {
         //DEV NOTE:
         //Selection is located via location_selection pivot
         //  We will keep the location_selection record until permanent deletion
         //Selection has items via item_selection pivot
         //  We will keep the items in our database if we ever need them again unless otherwise specified, in which case we should prompt for item deletion
-        Selection::findOrFail($id)->delete();
+        $selection = Selection::findOrFail($id);
+        
+        //Delete any associated approvals
+        foreach($selection->approvals as $approval) {
+            $approval->delete();
+        }
 
-        return redirect()->route('selectionList.show', [
-            'id' => session('selectionListId'),
-        ]);
+        $selection->delete();
+
+        return redirect()->route('selectionLists.show', [
+            'id' => session('roadmap.project.selectionList.selectionListId'),
+        ])->with('message', ['type' => 'success', 'body' => 'Selection successfully deleted']);;
     }
 }

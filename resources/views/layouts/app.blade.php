@@ -14,6 +14,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
         <!-- Styles -->
         @livewireStyles
@@ -25,23 +26,33 @@
             @livewire('navigation-menu')
 
             {{-- Project Navigation --}}
-            @if(session()->has('projectId'))
+            @if(session()->has('roadmap.project.projectId'))
                 @livewire('project-sidebar')
             @endif
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="{{ session()->has('projectId') ? 'ml-[300px]' : '' }} mt-14 bg-white">
+                <header class="{{ session()->has('roadmap.project') ? 'ml-[300px]' : '' }} mt-14 bg-white">
                     <div class="mx-auto p-6">
                         {{ $header }}
                         
                         {{-- Selections --}}
-                        @if(session()->has('selectionListId'))
+                        @if(session()->has('roadmap.project.selectionList'))
                         <div class="inline-flex text-xs">
-                            <a class="opacity-50 hover:opacity-100 transition ease-in-out" href="/selections">Selection Lists</a>
-                            @if (session()->has('selectionId'))
-                                <i class="fa fa-chevron-right mx-2 mt-1"></i><a class="opacity-50 hover:opacity-100 transition ease-in-out" href="/selection-list/{{ session('selectionListId') }}">{{ session('selectionListName') }}</a>
+                            <a class="opacity-50 hover:opacity-100 transition ease-in-out" href="/selection-lists">Selection Lists</a>
+                            @if (session()->has('roadmap.project.selectionList.selection'))
+                                <i class="fa fa-chevron-right mx-2 mt-1"></i>
+                                <a class="opacity-50 hover:opacity-100 transition ease-in-out" href="/selection-lists/{{ session('roadmap.project.selectionList.selectionListId') }}">
+                                    {{ session('roadmap.project.selectionList.selectionListName') }}    
+                                </a>
                             @endif
+                        </div>
+                        @endif
+
+                        {{-- Approvals --}}
+                        @if(session()->has('roadmap.project.approvalStage'))
+                        <div class="inline-flex text-xs">
+                            <a class="opacity-50 hover:opacity-100 transition ease-in-out" href="/approval-stages">Approval Stages</a>
                         </div>
                         @endif
 
@@ -51,14 +62,12 @@
             @endif
 
             <!-- Page Content -->
-            <main class="{{ session()->has('projectId') ? 'ml-[300px]' : '' }}">
+            <main class="{{ session()->has('roadmap.project') ? 'ml-[300px]' : '' }}">
                 {{ $slot }}
             </main>
 
-            <div class="fixed w-full p-3 bottom-0 ml-[300px] opacity-10 hover:opacity-100">
-                <p>{{ var_export(session()->all()) }}</p>
-            </div>
-
+            {{-- Toast --}}
+            <x-toast class="{{ session('message.type') == 'success' ? 'bg-blue-100 text-blue-400' : 'bg-red-100 text-red-400' }}"></x-toast>
         </div>
 
         @stack('modals')

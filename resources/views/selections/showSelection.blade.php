@@ -1,15 +1,72 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ $project->name }}
+            {{ $selection->name }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-3">
+                
+                {{-- Approvals DEV NOTE: Make into component --}}
+                <form action="/selections/approvals/create" method="POST" class="mb-3">
+                    @csrf
+                    
+                    <x-input type="hidden" name="selection_id" :value="$selection->id" />
+                    
+                    <div class="mt-2">
+                        <x-label for="approval_stage_id" value="{{ __('Approval Stage *') }}" />
+                        <x-select class="mt-1" name="approval_stage_id">
+                            @foreach ($project->approvalStages as $approvalStage)
+                                <option value="{{ $approvalStage->id }}">{{ $approvalStage->name }}</option>
+                            @endforeach
+                        </x-select>
+                    </div>
 
-                <a class="inline-flex mb-3 opacity-50 hover:opacity-100" href="/selection/{{ $selection->id }}/edit">Edit</a>
+                    <x-button class="mt-2" icon="thumbs-up" color="blue">Stage for Approval</x-button>
+                </form>
+
+                @foreach ($selection->approvals as $approval)
+                    <div class="flex justify-between mb-3 border rounded-md p-3">
+                        <div>
+                            <p class="text-xs">Approval Stage: {{ $approval->approvalStage->name }}</p>
+                            <p class="text-xs">Status: {{ $approval->status }}</p>
+                        </div>
+
+                        <div class="flex space-x-1">
+                            <form action="/approvals/{{ $approval->id }}/update-approval-status" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <x-input type="hidden" name="approval_id" value="{{ $approval->id }}" />
+                                <x-input type="hidden" name="status" value="Approved" />
+                                <x-button icon="thumbs-up" color="green">Approve</x-button>
+                            </form>
+                            <form action="/approvals/{{ $approval->id }}/update-approval-status" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <x-input type="hidden" name="approval_id" value="{{ $approval->id }}" />
+                                <x-input type="hidden" name="status" value="Pending" />
+                                <x-button icon="hourglass" color="yellow">Pending</x-button>
+                            </form>
+                            <form action="/approvals/{{ $approval->id }}/update-approval-status" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <x-input type="hidden" name="approval_id" value="{{ $approval->id }}" />
+                                <x-input type="hidden" name="status" value="Denied" />
+                                <x-button icon="thumbs-down" color="red">Deny</x-button>
+                            </form>
+                            <form action="/selections/approvals/{{ $approval->id }}/delete" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <x-button icon="trash">Delete</x-button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+
+                {{-- Selection Info --}}
+                <a class="inline-flex mb-3 opacity-50 hover:opacity-100" href="/selections/{{ $selection->id }}/edit">Edit</a>
 
                 <p class="font-semibold">{{ $selection->name }}</p>
                 <p class="text-xs">{{ $selection->created_at }}</p>
@@ -21,16 +78,24 @@
                 <p>This selection has not been located</p>
                 @endforelse
 
-                <a class="inline-flex mt-3 opacity-50 hover:opacity-100" href="/item/create">Add Item</a>
+                <a class="inline-flex mt-3 opacity-50 hover:opacity-100" href="/items/create">Add Item</a>
 
                 @if ($selection->items->count() > 1)
                 <p class="mt-3">This selection contains multiple options. Please select.</p>
                 @endif
                 
+                {{-- Items --}}
                 @foreach ($selection->items as $item)
                 <div class="border mt-3 p-3">
 
-                    <a class="inline-flex mb-3 opacity-50 hover:opacity-100" href="/item/{{ $item->id }}/edit">Edit</a>
+                    @if ($selection->items->count() > 1)
+                    <p>
+                        <i class="fa fa-fw fa-{{ $item->pivot->selected ? 'check' : 'multiply' }}"></i>
+                        {{ $item->pivot->selected ? 'Selected' : 'Not Selected' }}
+                    </p>
+                    @endif
+
+                    <a class="inline-flex mb-3 opacity-50 hover:opacity-100" href="/items/{{ $item->id }}/edit">Edit</a>
                     
                     <p class="text-xs font-semibold text-blue-600">Categories</p>
                     @forelse ($item->categories as $category)

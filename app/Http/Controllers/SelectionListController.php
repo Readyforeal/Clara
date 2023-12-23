@@ -14,10 +14,10 @@ class SelectionListController extends Controller
     public function index()
     {
         //Forget scoped IDs
-        session()->forget(['selectionListId', 'selectionListName', 'selectionId']);
+        session()->forget(['roadmap.project.selectionList', 'roadmap.project.approvalStage']);
         session(['feature' => 'selections']);
 
-        $project = Project::findOrFail(session('projectId'));
+        $project = Project::findOrFail(session('roadmap.project.projectId'));
 
         return view('selections.indexSelectionLists', [
             'project' => $project,
@@ -31,7 +31,7 @@ class SelectionListController extends Controller
     public function create()
     {
         return view('selections.createSelectionList', [
-            'project' => Project::findOrFail(session('projectId')),
+            'project' => Project::findOrFail(session('roadmap.project.projectId')),
         ]);
     }
 
@@ -43,19 +43,21 @@ class SelectionListController extends Controller
         //Validate form data
         $data = $request->validate([
             'name' => 'required',
+            'description' => '',
         ]);
 
         //Get the project and create the selection list
-        $project = Project::findOrFail(session('projectId'));
+        $project = Project::findOrFail(session('roadmap.project.projectId'));
 
         $selectionList = $project->selectionLists()->create([
             'name' => ucwords(strtolower($data['name'])),
+            'description' => $data['description'],
         ]);
 
         //Go to the selection list
-        return redirect()->route('selectionList.show', [
+        return redirect()->route('selectionLists.show', [
             'id' => $selectionList->id,
-        ]);
+        ])->with('message', ['type' => 'success', 'body' => 'Selection list successfully created']);;
     }
 
     /**
@@ -64,16 +66,16 @@ class SelectionListController extends Controller
     public function show(string $id)
     {
         //Forget scoped IDs
-        session()->forget(['selectionId']);
+        session()->forget(['project.selectionList.selection']);
 
         $selectionList = SelectionList::findorFail($id);
 
         //Set session values
         session([
-            'projectId' => $selectionList->project->id,
-            'projectName' => $selectionList->project->name,
-            'selectionListId' => $selectionList->id,
-            'selectionListName' => $selectionList->name
+            'roadmap.project.selectionList' => [
+                'selectionListId' => $selectionList->id,
+                'selectionListName' => $selectionList->name
+            ],
         ]);
 
         return view('selections.showSelectionList', [
@@ -88,7 +90,7 @@ class SelectionListController extends Controller
     public function edit(string $id)
     {
         return view('selections.editSelectionList', [
-            'project' => Project::findOrFail(session('projectId')),
+            'project' => Project::findOrFail(session('roadmap.project.projectId')),
             'selectionList' => SelectionList::findOrFail($id),
         ]);
     }
@@ -101,16 +103,18 @@ class SelectionListController extends Controller
         //Validate form data
         $data = $request->validate([
             'name' => 'required',
+            'description' => '',
         ]);
 
         //Get the selection list we're updating and update the data
         SelectionList::findOrFail($id)->update([
             'name' => ucwords(strtolower($data['name'])),
+            'description' => $data['description'],
         ]);
 
-        return redirect()->route('selectionList.show', [
+        return redirect()->route('selectionLists.show', [
             'id' => $id,
-        ]);
+        ])->with('message', ['type' => 'success', 'body' => 'Selection list successfully updated']);
     }
 
     /**
@@ -124,6 +128,6 @@ class SelectionListController extends Controller
         $selectionList->selections()->delete();
         $selectionList->delete();
 
-        return redirect()->route('selectionList.index');
+        return redirect()->route('selectionLists.index')->with('message', ['type' => 'success', 'body' => 'Selection list successfully deleted']);
     }
 }

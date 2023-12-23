@@ -1,7 +1,7 @@
-@props(['icon' => ''])
-<button {{ $attributes->merge(['type' => 'submit', 'class' => 'inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150']) }}>
-    @isset($icon)
-    <i class="fa fa-{{ $icon }} text-blue-400 mr-2"></i>
-    @endisset
+@props(['icon' => '', 'bgColor' => 'bg-black dark:bg-blue-100', 'textColor' => 'text-white dark:text-blue-500', 'borderColor' => 'border-black dark:border-blue-500'])
+<button {{ $attributes->merge(['type' => 'submit', 'class' => 'inline-flex items-center px-6 py-2 border ' . $borderColor . ' rounded-xl font-semibold text-xs ' . $textColor . ' ' . $bgColor . ' hover:opacity-80 focus:opacity-80 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150']) }}>
+    @if($icon != '')
+    <i class="fa fa-{{ $icon }} mr-2"></i>
+    @endif
     {{ $slot }}
 </button>

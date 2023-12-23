@@ -24,7 +24,7 @@ class ItemController extends Controller
     public function create()
     {
         return view('items.createItem', [
-            'project' => Project::findOrFail(session('projectId')),
+            'project' => Project::findOrFail(session('roadmap.project.projectId')),
         ]);
     }
 
@@ -58,13 +58,13 @@ class ItemController extends Controller
         ]);
 
         //Get the selection and attach
-        $selection = Selection::findOrFail(session('selectionId'));
+        $selection = Selection::findOrFail(session('roadmap.project.selectionList.selection.selectionId'));
         $selection->items()->attach($item->id);
 
         //Return to selection view
-        return to_route('selection.show', [
+        return redirect()->route('selections.show', [
             'id' => $selection->id,
-        ]);
+        ])->with('message', ['type' => 'success', 'body' => 'Item successfully created']);
     }
 
     /**
@@ -80,11 +80,17 @@ class ItemController extends Controller
      */
     public function edit(string $id)
     {
+        $item = Item::findOrFail($id);
+
         //Set session values
-        session(['itemId' => $id]);
+        session(['roadmap.project.selectionList.selection.item' => [
+                'itemId' => $item->id,
+                'itemName' => $item->name,
+            ]
+        ]);
 
         return view('items.editItem', [
-            'project' => Project::findOrFail(session('projectId')),
+            'project' => Project::findOrFail(session('roadmap.project.projectId')),
             'item' => Item::findOrFail($id),
         ]);
     }
@@ -94,6 +100,9 @@ class ItemController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        //DEV NOTE:
+        //When updating the selection, we should prompt whether or not to overwrite the existing item, or save as new item.
+        
         //Validate form data
         $data = $request->validate([
             'name' => 'required',
@@ -107,12 +116,21 @@ class ItemController extends Controller
         ]);
 
         //Get the item we're updating and update the data
-        Item::findOrFail($id)->update($data);
+        Item::findOrFail($id)->update([
+            'name' => ucwords(strtolower($data['name'])),
+            'item_number' => strtoupper($data['item_number']),
+            'supplier' => $data['supplier'],
+            'link' => $data['link'],
+            'image' => isset($data['image']) ? $data['image'] : '',
+            'dimensions' => $data['dimensions'],
+            'color' => ucwords(strtolower($data['color'])),
+            'notes' => $data['notes'],
+        ]);
 
         //Get selection and return to selection view
-        return redirect()->route('selection.show', [
-            'id' => session('selectionId'),
-        ]);
+        return redirect()->route('selections.show', [
+            'id' => session('roadmap.project.selectionList.selection.selectionId'),
+        ])->with('message', ['type' => 'success', 'body' => 'Item successfully updated']);;
     }
 
     /**
@@ -122,8 +140,8 @@ class ItemController extends Controller
     {
         Item::findOrFail($id)->delete();
 
-        return redirect()->route('selection.show', [
-            'id' => session('selectionId'),
-        ]);
+        return redirect()->route('selections.show', [
+            'id' => session('roadmap.project.selectionList.selection.selectionId'),
+        ])->with('message', ['type' => 'success', 'body' => 'Item successfully deleted']);;
     }
 }

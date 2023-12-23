@@ -4,7 +4,9 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SelectionListController;
 use App\Http\Controllers\SelectionController;
 use App\Http\Controllers\ItemController;
-use App\Http\COntrollers\ApprovalStageController;
+use App\Http\Controllers\ApprovalStageController;
+use App\Http\Controllers\ApprovalController;
+use App\Models\ApprovalStage;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,35 +33,50 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/projects', [ProjectController::class, 'index'])->name('project.index');
-    Route::get('/project/create', [ProjectController::class, 'create'])->name('project.create');
-    Route::post('/project/create', [ProjectController::class, 'store']);
-    Route::get('/project/{id}', [ProjectController::class, 'show'])->name('project.show');
-    Route::get('/project/{id}/edit', [ProjectController::class, 'edit'])->name('project.edit');
-    Route::patch('/project/{id}/edit', [ProjectController::class, 'update']);
-    Route::delete('/project/{id}/delete', [ProjectController::class, 'destroy']);
+    // Projects
+    Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+    Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
+    Route::post('/projects/create', [ProjectController::class, 'store']);
+    Route::get('/projects/{id}', [ProjectController::class, 'show'])->name('projects.show');
+    Route::get('/projects/{id}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+    Route::patch('/projects/{id}/edit', [ProjectController::class, 'update']);
+    Route::delete('/projects/{id}/delete', [ProjectController::class, 'destroy']);
 
-    Route::get('/selections', [SelectionListController::class, 'index'])->name('selectionList.index');
-    Route::get('/selection-list/create', [SelectionListController::class, 'create'])->name('selectionList.create');
-    Route::post('/selection-list/create', [SelectionListController::class, 'store']);
-    Route::get('/selection-list/{id}', [SelectionListController::class, 'show'])->name('selectionList.show');
-    Route::get('/selection-list/{id}/edit', [SelectionListController::class, 'edit'])->name('selectionList.edit');
-    Route::patch('/selection-list/{id}/edit', [SelectionListController::class, 'update']);
-    Route::delete('/selection-list/{id}/delete', [SelectionListController::class, 'destroy']);
+    // Selection Lists
+    Route::get('/selection-lists', [SelectionListController::class, 'index'])->name('selectionLists.index');
+    Route::get('/selection-lists/create', [SelectionListController::class, 'create'])->name('selectionLists.create');
+    Route::post('/selection-lists/create', [SelectionListController::class, 'store']);
+    Route::get('/selection-lists/{id}', [SelectionListController::class, 'show'])->name('selectionLists.show');
+    Route::get('/selection-lists/{id}/edit', [SelectionListController::class, 'edit'])->name('selectionLists.edit');
+    Route::patch('/selection-lists/{id}/edit', [SelectionListController::class, 'update']);
+    Route::delete('/selection-lists/{id}/delete', [SelectionListController::class, 'destroy']);
 
-    Route::get('/selection/create', [SelectionController::class, 'create'])->name('selection.create');
-    Route::post('/selection/create', [SelectionController::class, 'store']);
-    Route::get('/selection/{id}', [SelectionController::class, 'show'])->name('selection.show');
-    Route::get('/selection/{id}/edit', [SelectionController::class, 'edit'])->name('selection.edit');
-    Route::patch('/selection/{id}/edit', [SelectionController::class, 'update']);
-    Route::delete('/selection/{id}/delete', [SelectionController::class, 'destroy']);
+    // Selections
+    Route::get('/selections/create', [SelectionController::class, 'create'])->name('selections.create');
+    Route::post('/selections/create', [SelectionController::class, 'store']);
+    Route::get('/selections/{id}', [SelectionController::class, 'show'])->name('selections.show');
+    Route::get('/selections/{id}/edit', [SelectionController::class, 'edit'])->name('selections.edit');
+    Route::patch('/selections/{id}/edit', [SelectionController::class, 'update']);
+    Route::delete('/selections/{id}/delete', [SelectionController::class, 'destroy']);
 
-    Route::get('/item/create', [ItemController::class, 'create'])->name('item.create');
-    Route::post('/item/create', [ItemController::class, 'store']);
-    Route::get('/item/{id}/edit', [ItemController::class, 'edit'])->name('item.edit');
-    Route::patch('/item/{id}/edit', [ItemController::class, 'update']);
-    Route::delete('/item/{id}/delete', [ItemController::class, 'destroy']);
+    // Items
+    Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
+    Route::post('/items/create', [ItemController::class, 'store']);
+    Route::get('/items/{id}/edit', [ItemController::class, 'edit'])->name('items.edit');
+    Route::patch('/items/{id}/edit', [ItemController::class, 'update']);
+    Route::delete('/items/{id}/delete', [ItemController::class, 'destroy']);
 
-    Route::get('/approvals', [ApprovalStageController::class, 'index'])->name('approvalStages.index');
-    Route::get('/approval-stage/{id}', [ApprovalStageController::class, 'show'])->name('approvalStage.show');
+    // Approval Stages
+    Route::get('/approval-stages', [ApprovalStageController::class, 'index'])->name('approvalStages.index');
+    Route::get('/approval-stages/create', [ApprovalStageController::class, 'create'])->name('approvalStages.create');
+    Route::post('/approval-stages/create', [ApprovalStageController::class, 'store']);
+    Route::get('/approval-stages/{id}', [ApprovalStageController::class, 'show'])->name('approvalStages.show');
+    Route::get('/approval-stages/{id}/edit', [ApprovalStageController::class, 'edit'])->name('approvalStages.edit');
+    Route::patch('/approval-stages/{id}/edit', [ApprovalStageController::class, 'update']);
+    Route::delete('/approval-stages/{id}/delete', [ApprovalStageController::class, 'destroy']);
+
+    // Approvals
+    Route::post('/selections/approvals/create', [ApprovalController::class, 'createApprovalForSelection']);
+    Route::delete('/selections/approvals/{id}/delete', [ApprovalController::class, 'deleteSelectionApproval']);
+    Route::patch('/approvals/{id}/update-approval-status', [ApprovalController::class, 'updateApprovalStatus']);
 });

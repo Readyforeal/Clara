@@ -13,7 +13,7 @@
                 <p class="text-xs mb-3">Fields marked with * are required</p>
 
                 {{-- Make form into component --}}
-                <form action="/item/create" method="POST" enctype="multipart/form-data">
+                <form action="/items/create" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <p class="font-semibold">Item Info</p>

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('item_id');
             $table->unsignedBigInteger('selection_id');
+            $table->boolean('selected')->default(false);
             $table->timestamps();
         });
     }

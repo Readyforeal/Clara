@@ -17,11 +17,16 @@ class Selection extends Model
 
     //Pivot
     public function items() {
-        return $this->belongsToMany(Item::class);
+        return $this->belongsToMany(Item::class)->withPivot('selected');
     }
 
     //Pivot
     public function locations() {
         return $this->belongsToMany(Location::class);
+    }
+
+    //Polymorphic approvals
+    public function approvals() {
+        return $this->morphMany(Approval::class, 'approvable');
     }
 }

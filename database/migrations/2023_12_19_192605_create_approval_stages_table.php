@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('project_id');
             $table->string('name');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->index('project_id');
             $table->timestamps();
         });

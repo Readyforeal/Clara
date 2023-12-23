@@ -13,7 +13,7 @@ class ProjectController extends Controller
      */
     public function index() {
         //Forget session values
-        session()->forget(['feature', 'projectId', 'projectName', 'selectionListId', 'selectionId']);
+        session()->forget(['roadmap']);
 
         return view('projects.indexProjects', [
             'projects' => auth()->user()->currentTeam->projects()->get(),
@@ -65,13 +65,12 @@ class ProjectController extends Controller
     public function show(string $id): View
     {
         //Forget session values
-        session()->forget(['feature', 'projectId', 'selectionListId', 'selectionId']);
+        session()->forget(['roadmap', 'feature']);
 
         $project = Project::findOrFail($id);
 
         //Set session values
-        session(['projectId' => $project->id]);
-        session(['projectName' => $project->name]);
+        session(['roadmap' => ['project' => ['projectId' => $project->id, 'projectName' => $project->name]]]);
 
         //Return the view
         return view('projects.showProject', [

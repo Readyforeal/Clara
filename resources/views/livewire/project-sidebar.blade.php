@@ -12,16 +12,16 @@
             {{-- Navigation --}}
             <div class="flex-grow p-6">
                 @livewire('project-sidebar-link', [
-                    'link' => '/project/' . $project->id,
+                    'link' => '/projects/' . $project->id,
                     'icon' => 'fa fa-fw fa-home',
                     'label' => 'Home',
                     'highlighted' => (function() {
-                        return request()->routeIs('project.show');
+                        return request()->routeIs('projects.show');
                     })(),
                 ])
 
                 @livewire('project-sidebar-link', [
-                    'link' => '/selections',
+                    'link' => '/selection-lists',
                     'icon' => 'fa fa-fw fa-check-circle',
                     'label' => 'Selections',
                     'highlighted' => (function() {
@@ -30,7 +30,7 @@
                 ])
 
                 @livewire('project-sidebar-link', [
-                    'link' => '/approvals',
+                    'link' => '/approval-stages',
                     'icon' => 'fa fa-fw fa-thumbs-up',
                     'label' => 'Approvals',
                     'highlighted' => (function() {
@@ -66,7 +66,11 @@
                 ]) --}}
             </div>
 
-            <div class="flex-none p-6">
+            <div class="flex-none p-3">
+                <div class="text-[11px] opacity-40 hover:opacity-100 transition ease-in-out">
+                    <p><pre>roadmap: {{ json_encode(session('roadmap'), JSON_PRETTY_PRINT) }}</pre></p>
+                    <p><pre>feature: {{ json_encode(session('feature'), JSON_PRETTY_PRINT) }}</pre></p>
+                </div>
                 <a href="https://github.com/Readyforeal/Clara" target="_blank" class="opacity-50 hover:opacity-100">Clara v{{ config('app.version') }}</a>
             </div>
         </div>

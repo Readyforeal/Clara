@@ -13,7 +13,7 @@
                 <p class="text-xs mb-3">Fields marked with * are required</p>
 
                 {{-- Make form into component --}}
-                <form action="/selection/{{ $selection->id }}/edit" method="POST" enctype="multipart/form-data">
+                <form action="/selections/{{ $selection->id }}/edit" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
 
@@ -34,14 +34,14 @@
                         <x-input id="quantity" class="block mt-1 w-full" type="number" name="quantity" :value="$selection->quantity" />
                     </div>
 
-                    <x-button class="mt-2">Update</x-button>
+                    <x-button class="mt-2" icon="pen-to-square" color="blue">Update</x-button>
                     
                 </form>
 
-                <form class="mt-3" action="/selection/{{ $selection->id }}/delete" method="POST">
+                <form class="mt-3" action="/selections/{{ $selection->id }}/delete" method="POST">
                     @csrf
                     @method('DELETE')
-                    <x-button>Delete</x-button>
+                    <x-button icon="trash" color="blue">Delete</x-button>
                 </form>
             </div>
         </div>
