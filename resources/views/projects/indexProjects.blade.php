@@ -5,14 +5,16 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-3">
-                <a class="mb-3 opacity-50 hover:opacity-100" href="/projects/create">Create</a>
-                @foreach ($projects as $project)
-                    <p><a href="/projects/{{ $project->id }}">{{ $project->name }}</a></p>
-                @endforeach
-            </div>
+    {{-- Floating Center --}}
+    <div class="max-w-2xl mx-auto">
+        {{-- Content Block --}}
+        <div class="p-3 bg-white border border-gray-300 rounded-xl overflow-hidden">
+
+            <x-button-link icon="plus" url="/projects/create" class="mb-1">Create Project</x-button-link>
+            @foreach ($projects as $project)
+                <p><a href="/projects/{{ $project->id }}">{{ $project->name }}</a></p>
+            @endforeach
+
         </div>
     </div>
 </x-app-layout>

@@ -5,15 +5,20 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-3">
+    <div class="px-6">
+        {{-- Action zone --}}
+        <div>
+            <p class="text-xl font-semibold">{{ $project->name }}</p>
 
-                <a class="opacity-50 hover:opacity-100" href="/projects/{{ $project->id }}/edit">Edit</a>
+            <x-secondary-button-link class="mt-2" icon="pen" url="/projects/{{ $project->id }}/edit">
+                Edit Project
+            </x-secondary-button-link>
+        </div>
 
-                <p>Project Home</p>
-
-                <p>This is where we will provide quick access and recent data</p>
+        {{-- Content --}}
+        <div class="mt-3 max-w-1/2">
+            <div class="p-3 bg-white border border-gray-300 shadow-md rounded-md overflow-hidden">                    
+                <p>This is where we will provide quick access and recent data.</p>
             </div>
         </div>
     </div>
