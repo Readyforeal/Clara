@@ -1,16 +1,29 @@
-<div class="fixed w-[300px] top-14 bottom-0">
-    <div class="w-full h-full bg-white text-black border-r border-gray-300">
+<div class="fixed w-80 top-0 bottom-0 py-6 pl-6">
+    <div class="w-full h-full bg-gray-50 text-black rounded-xl shadow border border-white">
         <div class="h-full flex flex-col">
             {{-- Project information --}}
             <div class="px-6 mt-6">
-                <p class="text-xl font-semibold text-blue-500">{{ $project->name }}</p>
-                <p class="text-xs">{{ $project->street }}</p>
-                <p class="text-xs">{{ $project->city }}, {{ $project->state }} {{ $project->zip }}</p>
-                <p>{{ $project->description }}</p>
+                <div class="pb-6">
+                    <p class="text-2xl font-semibold text-blue-500">Clara</p>
+                </div>
+                <p class="text-2xl font-semibold mb-2">{{ $project->name }}</p>
+                <p class="text-xs font-semibold opacity-50">{{ $project->street }}</p>
+                <p class="text-xs font-semibold opacity-50">{{ $project->city }}, {{ $project->state }} {{ $project->zip }}</p>
+                <p class="text-xs font-semibold opacity-50 mt-2">{{ $project->description }}</p>
             </div>
 
             {{-- Navigation --}}
             <div class="flex-grow p-6">
+
+                @livewire('project-sidebar-link', [
+                    'link' => '/projects',
+                    'icon' => 'fa fa-fw fa-arrow-left',
+                    'label' => 'Projects',
+                    'highlighted' => (function() {
+                        return request()->routeIs('projects.index');
+                    })(),
+                ])
+
                 @livewire('project-sidebar-link', [
                     'link' => '/projects/' . $project->id,
                     'icon' => 'fa fa-fw fa-home',
@@ -67,7 +80,7 @@
             </div>
 
             <div class="flex-none p-3">
-                <div class="text-[11px] opacity-40 hover:opacity-100 transition ease-in-out">
+                <div class="text-[11px] opacity-10 hover:opacity-100 transition ease-in-out">
                     <p><pre>roadmap: {{ json_encode(session('roadmap'), JSON_PRETTY_PRINT) }}</pre></p>
                     <p><pre>feature: {{ json_encode(session('feature'), JSON_PRETTY_PRINT) }}</pre></p>
                 </div>

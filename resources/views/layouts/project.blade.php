@@ -22,12 +22,16 @@
     <body class="font-sans antialiased">
         <x-banner />
 
-        <div class="max-h-[calc(100vh-156px)] bg-white">
-            @livewire('navigation-menu')
+        <div class="min-h-screen bg-gray-100">
+            
+            {{-- Project Navigation --}}
+            @if(session()->has('roadmap.project.projectId'))
+                @livewire('project-sidebar')
+            @endif
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="mt-14 bg-white">
+                <header class="{{ session()->has('roadmap.project') ? 'ml-80' : '' }}">
                     <div class="mx-auto p-6">
                         {{ $header }}
                         
@@ -57,7 +61,7 @@
             @endif
 
             <!-- Page Content -->
-            <main>
+            <main class="{{ session()->has('roadmap.project') ? 'ml-80' : '' }}">
                 {{ $slot }}
             </main>
 

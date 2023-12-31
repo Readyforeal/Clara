@@ -17,7 +17,12 @@
 
                 <div class="mt-2">
                     <x-label for="name" value="{{ __('Name *') }}" />
-                    <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+                    <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="off" />
+                </div>
+
+                <div class="mt-2">
+                    <x-label for="description" value="{{ __('Description') }}" />
+                    <x-input id="description" class="block mt-1 w-full" type="text" name="description" :value="old('description')" autocomplete="off" />
                 </div>
 
                 <x-button class="mt-2" icon="arrow-right" color="blue">Create</x-button>
