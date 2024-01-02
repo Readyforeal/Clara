@@ -72,7 +72,7 @@ class DatabaseSeeder extends Seeder
         $items = Item::factory(20)->create();
 
         //Attach categories to projects
-        foreach($project->categories as $category) {
+        foreach($team->categories as $category) {
             $project->categories()->attach($category->id);
         }
 
