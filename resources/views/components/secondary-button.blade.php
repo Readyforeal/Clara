@@ -1,3 +1,12 @@
-<button {{ $attributes->merge(['type' => 'button', 'class' => 'inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150']) }}>
-    {{ $slot }}
+@props(['icon' => ''])
+
+<button {{ $attributes->merge(['type' => 'button', 'class' => 'inline-flex items-center px-6 py-2 font-semibold text-xs border shadow rounded-xl transition ease-in-out
+    bg-gray-50 hover:bg-white border-white text-black group']) }}>
+    
+    @if($icon != '')
+        <i class="fa fa-{{ $icon }} mr-2"></i>
+    @endif
+    @isset($slot)
+        {{ $slot }}
+    @endisset
 </button>

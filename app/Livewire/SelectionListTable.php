@@ -6,13 +6,16 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Selection;
 use App\Models\Project;
+use Livewire\Attributes\Url;
 
 class SelectionListTable extends Component
 {
     use WithPagination;
 
+    #[Url()]
     public $search = '';
-    public $viewBy = 'all';
+
+    public $viewBy = 'categories';
 
     public $selectionListId;
 
@@ -22,9 +25,12 @@ class SelectionListTable extends Component
 
     public function render()
     {
+        $project = Project::where('id', session('roadmap.project.projectId'))->first();
         return view('livewire.selection-list-table', [
-            'selections' => Selection::where('selection_list_id', session('roadmap.project.selectionList.selectionListId'))->search('name', $this->search)->paginate(),
-            'project' => Project::where('id', session('roadmap.project.projectId'))->first(),
+            'project' => $project,
+            'selections' => Selection::where('selection_list_id', $this->selectionListId)->search('name', $this->search)->get(),
+            'categories' => $project->categories()->search('name', $this->search)->get(),
+            'locations' => $project->locations()->search('name', $this->search)->get(),
         ]);
     }
 }
