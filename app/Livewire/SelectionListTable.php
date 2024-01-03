@@ -2,20 +2,19 @@
 
 namespace App\Livewire;
 
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Selection;
 use App\Models\Project;
-use Livewire\Attributes\Url;
 
 class SelectionListTable extends Component
 {
     use WithPagination;
 
-    #[Url()]
     public $search = '';
 
-    public $viewBy = 'categories';
+    public $viewBy = 'all';
 
     public $selectionListId;
 
@@ -32,5 +31,13 @@ class SelectionListTable extends Component
             'categories' => $project->categories()->search('name', $this->search)->get(),
             'locations' => $project->locations()->search('name', $this->search)->get(),
         ]);
+    }
+
+    protected function queryString()
+    {
+        return [
+            'search' => [],
+            'viewBy' => [],
+        ];
     }
 }
