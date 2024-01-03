@@ -1,7 +1,10 @@
 <div>
     <div class="flex justify-between">
         <div>
-            <x-input class="mb-2 text-sm" type="text" name="search" placeholder="Search.." wire:model.live="search" />
+            <x-input class="mb-2 text-sm" type="text" name="search" wire:model.live="search"
+            placeholder="Search {{
+                $viewBy
+            }}.." />
 
             <x-secondary-button wire:click="$set('viewBy', 'all')">
                 <i class="fa fa-table"></i>
@@ -31,9 +34,9 @@
         <x-table class="mt-1">
             <x-slot name="head">
                 <x-table.row>
-                    <x-table.cell class="font-semibold w-1/6"><i class="fa fa-check mr-2"></i>Selection</x-table.cell>
-                    <x-table.cell class="font-semibold w-1/6"><i class="fa fa-box mr-2"></i>Item(s)</x-table.cell>
-                    <x-table.cell class="font-semibold w-1/6"><i class="fa fa-tag mr-2"></i>Categories</x-table.cell>
+                    <x-table.cell class="font-semibold"><i class="fa fa-check mr-2"></i>Selection</x-table.cell>
+                    <x-table.cell class="font-semibold"><i class="fa fa-box mr-2"></i>Item(s)</x-table.cell>
+                    <x-table.cell class="font-semibold"><i class="fa fa-tag mr-2"></i>Categories</x-table.cell>
                     <x-table.cell class="font-semibold"><i class="fa fa-location mr-2"></i>Locations</x-table.cell>
                 </x-table.row>
             </x-slot>
@@ -42,7 +45,7 @@
                 @foreach ($selections as $selection)
                     <x-table.row>
                         <x-table.cell>
-                            {{ $selection->name }}
+                            <a href="/selections/{{ $selection->id }}">{{ $selection->name }}</a>
                         </x-table.cell>
 
                         <x-table.cell>
@@ -73,18 +76,31 @@
     @if ($viewBy == 'categories')
         @foreach ($categories as $category)
             <x-table class="mt-1 mb-2">
-                <x-slot name="head">
-                    <x-table.row>
-                        <x-table.cell class="font-semibold">{{ $category->name }}</x-table.cell>
-                    </x-table.row>
+                <x-slot name="caption">
+                    <span class="font-semibold">{{ $category->name }}</span>
                 </x-slot>
 
                 <x-slot name="body">
                     @foreach ($category->items as $item)
                         @foreach ($item->selections->where('selection_list_id', $selectionListId) as $selection)
                             <x-table.row>
-                                <x-table.cell>{{ $selection->name }}</x-table.cell>
-                                <x-table.cell>{{ $item->name }}</x-table.cell>
+                                <x-table.cell class="w-1/6">
+                                    <a href="/selections/{{ $selection->id }}">{{ $selection->name }}</a>
+                                </x-table.cell>
+
+                                <x-table.cell class="w-1/6">
+                                    @forelse($selection->items as $item)
+                                        {{ $item->name }},
+                                    @empty
+                                        Selection needed
+                                    @endforelse
+                                </x-table.cell>
+        
+                                <x-table.cell class="w-1/6">
+                                    @foreach($selection->locations->flatten()->unique('name') as $location)
+                                        {{ $location->name }}
+                                    @endforeach
+                                </x-table.cell>
                             </x-table.row>
                         @endforeach
                     @endforeach
@@ -111,7 +127,23 @@
                 <x-slot name="body">
                     @forelse ($location->selections->where('selection_list_id', $selectionListId) as $selection)
                         <x-table.row>
-                            <x-table.cell>{{ $selection->name }}</x-table.cell>
+                            <x-table.cell>
+                                <a href="/selections/{{ $selection->id }}">{{ $selection->name }}</a>
+                            </x-table.cell>
+
+                            <x-table.cell>
+                                @forelse($selection->items as $item)
+                                    {{ $item->name }},
+                                @empty
+                                    Selection needed
+                                @endforelse
+                            </x-table.cell>
+    
+                            <x-table.cell>
+                                @foreach($selection->items->pluck('categories')->flatten()->unique('name') as $category)
+                                    {{ $category->name }}
+                                @endforeach
+                            </x-table.cell>
                         </x-table.row>
                     @empty
                         <x-table.row>
