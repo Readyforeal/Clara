@@ -3,7 +3,7 @@
     <table class="min-w-full divide-y divide-gray-300 table-auto">
         
         @isset($caption)
-        <caption class="text-left px-6 py-4 whitespace-no-wrap text-sm leading-5 bg-blue-500 text-white">
+        <caption class="text-left px-6 py-4 whitespace-no-wrap text-sm leading-5">
             {{ $caption }}
         </caption>
         @endisset

@@ -9,5 +9,5 @@
 @endif
 
 @if ($status == 'Denied')
-    <span class="py-1 px-3 text-red-800 bg-red-100 border-white rounded-xl text-xs"><i class="fa fa-fw fa-thumbs-down mr-1"></i>{{ $slot }}</span>
+    <span class="py-1 px-3 text-red-800 bg-red-100 border border-red-300 rounded-xl text-xs"><i class="fa fa-fw fa-thumbs-down mr-1"></i>{{ $slot }}</span>
 @endif

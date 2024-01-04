@@ -1,20 +1,20 @@
 <div>
     <div class="flex justify-between mb-3">
         <div>
-            <x-input class="text-sm" type="text" name="search" wire:model.live="search"
+            <x-input class="text-sm" type="text" name="search" wire:model.live.debounce.500ms="search"
             placeholder="Search {{
                 $viewBy
             }}.." />
 
-            <x-secondary-button wire:click="$set('viewBy', 'all')">
+            <x-secondary-button wire:click="setView('all')">
                 <i class="fa fa-table"></i>
             </x-secondary-button>
         
-            <x-secondary-button wire:click="$set('viewBy', 'categories')">
+            <x-secondary-button wire:click="setView('categories')">
                 <i class="fa fa-tag"></i>
             </x-secondary-button>
         
-            <x-secondary-button wire:click="$set('viewBy', 'locations')">
+            <x-secondary-button wire:click="setView('locations')">
                 <i class="fa fa-location"></i>
             </x-secondary-button>
 
@@ -37,24 +37,17 @@
                     <x-table.cell class="font-semibold w-10">
                         <x-checkbox />
                     </x-table.cell>
-                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-check mr-2"></i>Selection</x-table.cell>
-                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-box mr-2"></i>Item(s)</x-table.cell>
+                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-check-circle mr-2"></i>Selection</x-table.cell>
+                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-box mr-2"></i>Items</x-table.cell>
                     <x-table.cell class="font-semibold w-1/5"><i class="fa fa-tag mr-2"></i>Categories</x-table.cell>
-                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-location mr-2"></i>Locations</x-table.cell>
-                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-check mr-2"></i>Approval Status</x-table.cell>
+                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-location-dot mr-2"></i>Locations</x-table.cell>
+                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-thumbs-up mr-2"></i>Approval Status</x-table.cell>
                 </x-table.row>
             </x-slot>
 
             <x-slot name="body">
                 @foreach ($selections as $selection)
-                    @php
-                        $latestApproval = $selection->approvals()->latest()->first();
-                    @endphp
-
-                    <x-table.row class="{{
-                        (optional($latestApproval)->status == 'Pending') ? 'bg-yellow-50' : 
-                        ((optional($latestApproval)->status == 'Approved') ? 'bg-green-50' : 'bg-red-50')
-                    }}">
+                    <x-table.row class="{{ $this->getSelectionApprovalStatusColor($selection->id) }}">
                         <x-table.cell>
                             <x-checkbox />
                         </x-table.cell>
@@ -73,22 +66,24 @@
 
                         <x-table.cell>
                             @foreach($selection->items->pluck('categories')->flatten()->unique('name') as $category)
-                                {{ $category->name }}
+                                <a href="/selection-lists/{{ $selectionListId }}?viewBy=categories&search={{ $category->name }}">{{ $category->name }}</a>
                             @endforeach
                         </x-table.cell>
 
                         <x-table.cell>
                             @foreach($selection->locations->flatten()->unique('name') as $location)
-                                {{ $location->name }}
+                                <a href="/selection-lists/{{ $selectionListId }}?viewBy=locations&search={{ $location->name }}">{{ $location->name }}</a>
                             @endforeach
                         </x-table.cell>
 
                         <x-table.cell>
-                            @foreach ($selection->approvals as $approval)
+                            @forelse ($selection->approvals as $approval)
                                 <x-approval-badge :status="$approval->status">
                                     {{ $approval->approvalStage->name }}
                                 </x-approval-badge>
-                            @endforeach
+                            @empty
+                                <span class="opacity-50">No open approvals</span>
+                            @endforelse
                         </x-table.cell>
                     </x-table.row>
                 @endforeach
@@ -110,7 +105,7 @@
                             <x-checkbox />
                         </x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-check mr-2"></i>Selection</x-table.cell>
-                        <x-table.cell class="font-semibold w-1/5"><i class="fa fa-box mr-2"></i>Item(s)</x-table.cell>
+                        <x-table.cell class="font-semibold w-1/5"><i class="fa fa-box mr-2"></i>Items</x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-tag mr-2"></i>Categories</x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-location mr-2"></i>Locations</x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-check mr-2"></i>Approval Status</x-table.cell>
@@ -121,7 +116,7 @@
                 <x-slot name="body">
                     @foreach ($category->items as $item)
                         @foreach ($item->selections->where('selection_list_id', $selectionListId) as $selection)
-                            <x-table.row>
+                            <x-table.row class="{{ $this->getSelectionApprovalStatusColor($selection->id) }}">
                                 <x-table.cell>
                                     <x-checkbox />
                                 </x-table.cell>
@@ -140,14 +135,24 @@
         
                                 <x-table.cell>
                                     @foreach($selection->items->pluck('categories')->flatten()->unique('name') as $category)
-                                        {{ $category->name }}
+                                        <a href="/selection-lists/{{ $selectionListId }}?viewBy=categories&search={{ $category->name }}">{{ $category->name }}</a>
                                     @endforeach
                                 </x-table.cell>
         
                                 <x-table.cell>
                                     @foreach($selection->locations->flatten()->unique('name') as $location)
-                                        {{ $location->name }}
+                                        <a href="/selection-lists/{{ $selectionListId }}?viewBy=locations&search={{ $location->name }}">{{ $location->name }}</a>
                                     @endforeach
+                                </x-table.cell>
+
+                                <x-table.cell>
+                                    @forelse ($selection->approvals as $approval)
+                                        <x-approval-badge :status="$approval->status">
+                                            {{ $approval->approvalStage->name }}
+                                        </x-approval-badge>
+                                    @empty
+                                        <span class="opacity-50">No open approvals</span>
+                                    @endforelse
                                 </x-table.cell>
                             </x-table.row>
                         @endforeach
@@ -177,7 +182,7 @@
                             <x-checkbox />
                         </x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-check mr-2"></i>Selection</x-table.cell>
-                        <x-table.cell class="font-semibold w-1/5"><i class="fa fa-box mr-2"></i>Item(s)</x-table.cell>
+                        <x-table.cell class="font-semibold w-1/5"><i class="fa fa-box mr-2"></i>Items</x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-tag mr-2"></i>Categories</x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-location mr-2"></i>Locations</x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-check mr-2"></i>Approval Status</x-table.cell>
@@ -187,7 +192,7 @@
 
                 <x-slot name="body">
                     @forelse ($location->selections->where('selection_list_id', $selectionListId) as $selection)
-                        <x-table.row>
+                        <x-table.row class="{{ $this->getSelectionApprovalStatusColor($selection->id) }}">
                             <x-table.cell>
                                 <x-checkbox />
                             </x-table.cell>
@@ -206,14 +211,24 @@
 
                             <x-table.cell>
                                 @foreach($selection->items->pluck('categories')->flatten()->unique('name') as $category)
-                                    {{ $category->name }}
+                                    <a href="/selection-lists/{{ $selectionListId }}?viewBy=categories&search={{ $category->name }}">{{ $category->name }}</a>
                                 @endforeach
                             </x-table.cell>
 
                             <x-table.cell>
                                 @foreach($selection->locations->flatten()->unique('name') as $location)
-                                    {{ $location->name }}
+                                    <a href="/selection-lists/{{ $selectionListId }}?viewBy=locations&search={{ $location->name }}">{{ $location->name }}</a>
                                 @endforeach
+                            </x-table.cell>
+
+                            <x-table.cell>
+                                @forelse ($selection->approvals as $approval)
+                                    <x-approval-badge :status="$approval->status">
+                                        {{ $approval->approvalStage->name }}
+                                    </x-approval-badge>
+                                @empty
+                                    <span class="opacity-50">No open approvals</span>
+                                @endforelse
                             </x-table.cell>
                         </x-table.row>
                     @empty

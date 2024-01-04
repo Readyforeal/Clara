@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Selection;
@@ -22,8 +21,7 @@ class SelectionListTable extends Component
         $this->selectionListId = $selectionListId;
     }
 
-    public function render()
-    {
+    public function render() {
         $project = Project::where('id', session('roadmap.project.projectId'))->first();
         return view('livewire.selection-list-table', [
             'project' => $project,
@@ -33,11 +31,30 @@ class SelectionListTable extends Component
         ]);
     }
 
-    protected function queryString()
-    {
+    protected function queryString() {
         return [
             'search' => [],
             'viewBy' => [],
         ];
+    }
+
+    public function getSelectionApprovalStatusColor($selectionId) {
+        $selection = Selection::findOrFail($selectionId);
+        $latestApproval = $selection->approvals()->latest()->first();
+
+        if($latestApproval != null) {
+            if($latestApproval->status == 'Pending') {
+                return 'bg-yellow-50';
+            }elseif($latestApproval->status == 'Approved') {
+                return 'bg-green-50';
+            }elseif($latestApproval->status == 'Denied') {
+                return 'bg-red-50';
+            }
+        }
+    }
+
+    public function setView($view) {
+        $this->reset('search');
+        $this->viewBy = $view;
     }
 }

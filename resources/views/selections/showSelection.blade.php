@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-project-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl">
             Selection
@@ -143,4 +143,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-project-layout>
