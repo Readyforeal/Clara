@@ -17,6 +17,9 @@ class SelectionListTable extends Component
 
     public $selectionListId;
 
+    public $selected = [];
+    public $selectAll = false;
+
     public function mount($selectionListId) {
         $this->selectionListId = $selectionListId;
     }
@@ -44,17 +47,34 @@ class SelectionListTable extends Component
 
         if($latestApproval != null) {
             if($latestApproval->status == 'Pending') {
-                return 'bg-yellow-50';
+                return 'bg-yellow-100';
             }elseif($latestApproval->status == 'Approved') {
-                return 'bg-green-50';
+                return 'bg-green-100';
             }elseif($latestApproval->status == 'Denied') {
-                return 'bg-red-50';
+                return 'bg-red-100';
             }
+        }
+    }
+
+    public function getSelectionNeeded($selectionId) {
+        $selection = Selection::findOrFail($selectionId);
+
+        if($selection->items->count() == 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 
     public function setView($view) {
         $this->reset('search');
         $this->viewBy = $view;
+    }
+
+    public function deleteSelected() {
+        Selection::query()
+            ->whereIn('id', $this->selected)
+            ->delete();
+        $this->selected = [];
     }
 }

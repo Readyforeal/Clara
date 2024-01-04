@@ -15,7 +15,7 @@
             </x-secondary-button>
         
             <x-secondary-button wire:click="setView('locations')">
-                <i class="fa fa-location"></i>
+                <i class="fa fa-location-dot"></i>
             </x-secondary-button>
 
             @if ($viewBy == 'categories')
@@ -27,6 +27,7 @@
 
         <div>
             <x-button-link icon="plus" url="/selections/create">Create Selection</x-button-link>
+            <x-button-link wire:click.prevent="deleteSelected" icon="trash">Delete</x-button-link>
         </div>
     </div>
 
@@ -35,21 +36,21 @@
             <x-slot name="head">
                 <x-table.row>
                     <x-table.cell class="font-semibold w-10">
-                        <x-checkbox />
+                        <x-checkbox wire:model.live="selectAll" />
                     </x-table.cell>
                     <x-table.cell class="font-semibold w-1/5"><i class="fa fa-check-circle mr-2"></i>Selection</x-table.cell>
                     <x-table.cell class="font-semibold w-1/5"><i class="fa fa-box mr-2"></i>Items</x-table.cell>
                     <x-table.cell class="font-semibold w-1/5"><i class="fa fa-tag mr-2"></i>Categories</x-table.cell>
-                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-location-dot mr-2"></i>Locations</x-table.cell>
+                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-location-dot-dot mr-2"></i>Locations</x-table.cell>
                     <x-table.cell class="font-semibold w-1/5"><i class="fa fa-thumbs-up mr-2"></i>Approval Status</x-table.cell>
                 </x-table.row>
             </x-slot>
 
             <x-slot name="body">
                 @foreach ($selections as $selection)
-                    <x-table.row class="{{ $this->getSelectionApprovalStatusColor($selection->id) }}">
+                    <x-table.row class="{{ $this->getSelectionNeeded($selection->id) ? 'bg-red-100' : $this->getSelectionApprovalStatusColor($selection->id) }}">
                         <x-table.cell>
-                            <x-checkbox />
+                            <x-checkbox wire:model.live="selected" value="{{ $selection->id }}" />
                         </x-table.cell>
 
                         <x-table.cell>
@@ -58,16 +59,21 @@
 
                         <x-table.cell>
                             @forelse($selection->items as $item)
-                                {{ $item->name }},
+                                @if(!$loop->first)
+                                    ,
+                                @endif
+                                {{ $item->name }}
                             @empty
                                 Selection needed
                             @endforelse
                         </x-table.cell>
 
                         <x-table.cell>
-                            @foreach($selection->items->pluck('categories')->flatten()->unique('name') as $category)
+                            @forelse($selection->items->pluck('categories')->flatten()->unique('name') as $category)
                                 <a href="/selection-lists/{{ $selectionListId }}?viewBy=categories&search={{ $category->name }}">{{ $category->name }}</a>
-                            @endforeach
+                            @empty
+                                <span class="opacity-50">Uncategorized</span>
+                            @endforelse
                         </x-table.cell>
 
                         <x-table.cell>
@@ -107,7 +113,7 @@
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-check mr-2"></i>Selection</x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-box mr-2"></i>Items</x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-tag mr-2"></i>Categories</x-table.cell>
-                        <x-table.cell class="font-semibold w-1/5"><i class="fa fa-location mr-2"></i>Locations</x-table.cell>
+                        <x-table.cell class="font-semibold w-1/5"><i class="fa fa-location-dot mr-2"></i>Locations</x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-check mr-2"></i>Approval Status</x-table.cell>
                     </x-table.row>
                 </x-slot>
@@ -116,7 +122,7 @@
                 <x-slot name="body">
                     @foreach ($category->items as $item)
                         @foreach ($item->selections->where('selection_list_id', $selectionListId) as $selection)
-                            <x-table.row class="{{ $this->getSelectionApprovalStatusColor($selection->id) }}">
+                            <x-table.row class="{{ $this->getSelectionNeeded($selection->id) ? 'bg-red-100' : $this->getSelectionApprovalStatusColor($selection->id) }}">
                                 <x-table.cell>
                                     <x-checkbox />
                                 </x-table.cell>
@@ -127,7 +133,10 @@
         
                                 <x-table.cell>
                                     @forelse($selection->items as $item)
-                                        {{ $item->name }},
+                                        @if(!$loop->first)
+                                            ,
+                                        @endif
+                                        {{ $item->name }}
                                     @empty
                                         Selection needed
                                     @endforelse
@@ -184,7 +193,7 @@
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-check mr-2"></i>Selection</x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-box mr-2"></i>Items</x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-tag mr-2"></i>Categories</x-table.cell>
-                        <x-table.cell class="font-semibold w-1/5"><i class="fa fa-location mr-2"></i>Locations</x-table.cell>
+                        <x-table.cell class="font-semibold w-1/5"><i class="fa fa-location-dot mr-2"></i>Locations</x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-check mr-2"></i>Approval Status</x-table.cell>
                     </x-table.row>
                 </x-slot>
@@ -192,7 +201,7 @@
 
                 <x-slot name="body">
                     @forelse ($location->selections->where('selection_list_id', $selectionListId) as $selection)
-                        <x-table.row class="{{ $this->getSelectionApprovalStatusColor($selection->id) }}">
+                        <x-table.row class="{{ $this->getSelectionNeeded($selection->id) ? 'bg-red-100' : $this->getSelectionApprovalStatusColor($selection->id) }}">
                             <x-table.cell>
                                 <x-checkbox />
                             </x-table.cell>
@@ -203,7 +212,10 @@
 
                             <x-table.cell>
                                 @forelse($selection->items as $item)
-                                    {{ $item->name }},
+                                    @if(!$loop->first)
+                                        ,
+                                    @endif
+                                    {{ $item->name }}
                                 @empty
                                     Selection needed
                                 @endforelse
