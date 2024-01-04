@@ -30,18 +30,18 @@
             <x-button-link wire:click.prevent="deleteSelected" icon="trash">Delete</x-button-link>
         </div>
     </div>
-
+    {{ var_export($selected) }}
     @if ($viewBy == 'all')
         <x-table class="mt-1">
             <x-slot name="head">
                 <x-table.row>
                     <x-table.cell class="font-semibold w-10">
-                        <x-checkbox wire:model.live="selectAll" />
+                        <x-checkbox wire:click="selectAll({{ $selections->pluck('id') }})"/>
                     </x-table.cell>
                     <x-table.cell class="font-semibold w-1/5"><i class="fa fa-check-circle mr-2"></i>Selection</x-table.cell>
                     <x-table.cell class="font-semibold w-1/5"><i class="fa fa-box mr-2"></i>Items</x-table.cell>
                     <x-table.cell class="font-semibold w-1/5"><i class="fa fa-tag mr-2"></i>Categories</x-table.cell>
-                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-location-dot-dot mr-2"></i>Locations</x-table.cell>
+                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-location-dot mr-2"></i>Locations</x-table.cell>
                     <x-table.cell class="font-semibold w-1/5"><i class="fa fa-thumbs-up mr-2"></i>Approval Status</x-table.cell>
                 </x-table.row>
             </x-slot>
@@ -50,7 +50,7 @@
                 @foreach ($selections as $selection)
                     <x-table.row class="{{ $this->getSelectionNeeded($selection->id) ? 'bg-red-100' : $this->getSelectionApprovalStatusColor($selection->id) }}">
                         <x-table.cell>
-                            <x-checkbox wire:model.live="selected" value="{{ $selection->id }}" />
+                            <x-checkbox wire:model.live="selected" :value="$selection->id" />
                         </x-table.cell>
 
                         <x-table.cell>
@@ -108,7 +108,7 @@
                 <x-slot name="head">
                     <x-table.row>
                         <x-table.cell class="font-semibold w-10">
-                            <x-checkbox />
+                            <x-checkbox wire:model.live="categoriesSelected.{{ $category->id }}" wire:click="selectAllByCategory({{ $category->id }}, {{$category->items->pluck('selections')->flatten()->pluck('id') }})" />
                         </x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-check mr-2"></i>Selection</x-table.cell>
                         <x-table.cell class="font-semibold w-1/5"><i class="fa fa-box mr-2"></i>Items</x-table.cell>
@@ -124,7 +124,7 @@
                         @foreach ($item->selections->where('selection_list_id', $selectionListId) as $selection)
                             <x-table.row class="{{ $this->getSelectionNeeded($selection->id) ? 'bg-red-100' : $this->getSelectionApprovalStatusColor($selection->id) }}">
                                 <x-table.cell>
-                                    <x-checkbox />
+                                    <x-checkbox wire:model.live="selected" :value="$selection->id" />
                                 </x-table.cell>
         
                                 <x-table.cell>

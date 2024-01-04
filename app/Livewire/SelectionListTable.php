@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Selection;
 use App\Models\Project;
+use Illuminate\Support\Arr;
 
 class SelectionListTable extends Component
 {
@@ -18,7 +19,8 @@ class SelectionListTable extends Component
     public $selectionListId;
 
     public $selected = [];
-    public $selectAll = false;
+    public $selectedAll = false;
+    public $categoriesSelected = [];
 
     public function mount($selectionListId) {
         $this->selectionListId = $selectionListId;
@@ -66,6 +68,24 @@ class SelectionListTable extends Component
         }
     }
 
+    public function selectAll(array $allSelected) {
+        if($this->selectedAll) {
+            $this->selected = [];
+            $this->selectedAll = false;
+        } else {
+            $this->selected = $allSelected;
+            $this->selectedAll = true;
+        }
+    }
+
+    public function selectAllByCategory($category, array $allSelected) {
+        if($this->categoriesSelected[$category]) {
+            $this->selected = array_merge($this->selected, $allSelected);
+        } else {
+            $this->selected = array_diff($this->selected, $allSelected);
+        }
+    }
+
     public function setView($view) {
         $this->reset('search');
         $this->viewBy = $view;
@@ -77,4 +97,18 @@ class SelectionListTable extends Component
             ->delete();
         $this->selected = [];
     }
+
+    // public function updatedSelectAll($value) {
+    //     $newArray = array_map('strval', json_decode($value));
+    //     $newArray = array_values($newArray);
+    //     $this->selectAll = $newArray;
+    //     $this->selected = $this->selectAll;
+    // }
+
+    // public function updatedSelectedAll($value) {
+    //     if($value == false) {
+    //         $this->selectAll = [];
+    //         $this->selected = [];
+    //     }
+    // }
 }
