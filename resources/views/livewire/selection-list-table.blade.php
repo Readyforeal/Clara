@@ -1,7 +1,7 @@
 <div>
     <div class="flex justify-between mb-3">
         <div>
-            <x-input class="text-sm" type="text" name="search" wire:model.live.debounce.500ms="search"
+            <x-input class="text-sm" type="text" name="search" wire:model.live.debounce.250ms="search"
             placeholder="Search {{
                 $viewBy
             }}.." />
@@ -30,27 +30,51 @@
             <x-button-link wire:click.prevent="deleteSelected" icon="trash">Delete</x-button-link>
         </div>
     </div>
-    {{ var_export($selected) }}
+
+    {{-- View by categories --}}
     @if ($viewBy == 'all')
-        <x-table class="mt-1">
+        <x-table class="mt-1 transition ease-in-out" wire:loading.class="opacity-50">
+            {{-- Table head --}}
             <x-slot name="head">
                 <x-table.row>
+                    {{-- Compare selectAll parameter to selected array. If all values are present, set category as true in selectedCategories --}}
                     <x-table.cell class="font-semibold w-10">
-                        <x-checkbox wire:click="selectAll({{ $selections->pluck('id') }})"/>
+                        <x-checkbox wire:click="selectAll({{ $selections->pluck('id') }})"/> 
                     </x-table.cell>
-                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-check-circle mr-2"></i>Selection</x-table.cell>
-                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-box mr-2"></i>Items</x-table.cell>
-                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-tag mr-2"></i>Categories</x-table.cell>
-                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-location-dot mr-2"></i>Locations</x-table.cell>
-                    <x-table.cell class="font-semibold w-1/5"><i class="fa fa-thumbs-up mr-2"></i>Approval Status</x-table.cell>
+
+                    <x-table.cell class="font-semibold w-1/5">
+                        <i class="fa fa-check-circle mr-2"></i>
+                        Selection
+                    </x-table.cell>
+
+                    <x-table.cell class="font-semibold w-1/5">
+                        <i class="fa fa-box mr-2"></i>
+                        Items
+                    </x-table.cell>
+
+                    <x-table.cell class="font-semibold w-1/5">
+                        <i class="fa fa-tag mr-2"></i>
+                        Categories
+                    </x-table.cell>
+
+                    <x-table.cell class="font-semibold w-1/5">
+                        <i class="fa fa-location-dot mr-2"></i>
+                        Locations
+                    </x-table.cell>
+
+                    <x-table.cell class="font-semibold w-1/5">
+                        <i class="fa fa-thumbs-up mr-2"></i>
+                        Approval Status
+                    </x-table.cell>
                 </x-table.row>
             </x-slot>
 
+            {{-- Table body --}}
             <x-slot name="body">
                 @foreach ($selections as $selection)
                     <x-table.row class="{{ $this->getSelectionNeeded($selection->id) ? 'bg-red-100' : $this->getSelectionApprovalStatusColor($selection->id) }}">
                         <x-table.cell>
-                            <x-checkbox wire:model.live="selected" :value="$selection->id" />
+                            <x-checkbox wire:model.live="selected" :value="$selection->id" wire:loading.attr="disabled" />
                         </x-table.cell>
 
                         <x-table.cell>
@@ -99,7 +123,7 @@
 
     @if ($viewBy == 'categories')
         @foreach ($categories as $category)
-            <x-table class="mt-1 mb-2">
+            <x-table class="mt-1 mb-2 transition ease-in-out" wire:loading.class="opacity-50">
                 <x-slot name="caption">
                     <span class="font-semibold">{{ $category->name }}</span>
                 </x-slot>
@@ -124,7 +148,7 @@
                         @foreach ($item->selections->where('selection_list_id', $selectionListId) as $selection)
                             <x-table.row class="{{ $this->getSelectionNeeded($selection->id) ? 'bg-red-100' : $this->getSelectionApprovalStatusColor($selection->id) }}">
                                 <x-table.cell>
-                                    <x-checkbox wire:model.live="selected" :value="$selection->id" />
+                                    <x-checkbox wire:model.live="selected" value="{{ $selection->id }}" wire:loading.attr="disabled" />
                                 </x-table.cell>
         
                                 <x-table.cell>

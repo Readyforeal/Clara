@@ -20,7 +20,7 @@ class SelectionListTable extends Component
 
     public $selected = [];
     public $selectedAll = false;
-    public $categoriesSelected = [];
+    public $selectedCategories = [];
 
     public function mount($selectionListId) {
         $this->selectionListId = $selectionListId;
@@ -78,11 +78,22 @@ class SelectionListTable extends Component
         }
     }
 
-    public function selectAllByCategory($category, array $allSelected) {
-        if($this->categoriesSelected[$category]) {
+    public function selectAllByCategory($categoryId, array $allSelected) {
+        $categoryId = (int) $categoryId;
+
+        // Initialize the category if it doesn't exist
+        if (!isset($this->selectedCategories[$categoryId])) {
+            $this->selectedCategories[$categoryId] = false;
+        }
+
+        // Toggle the category selection status
+        $this->selectedCategories[$categoryId] = !$this->selectedCategories[$categoryId];
+
+        // If category is selected, add its items to selectedItems; otherwise, remove them
+        if($this->selectedCategories[$categoryId]) {
             $this->selected = array_merge($this->selected, $allSelected);
         } else {
-            $this->selected = array_diff($this->selected, $allSelected);
+            $this->selected = array_values(array_diff($this->selected, $allSelected));
         }
     }
 
