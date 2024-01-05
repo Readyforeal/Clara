@@ -68,36 +68,42 @@ class SelectionListTable extends Component
         }
     }
 
-    public function selectAll(array $allSelected) {
-        if($this->selectedAll) {
-            $this->selected = [];
-            $this->selectedAll = false;
-        } else {
-            $this->selected = $allSelected;
-            $this->selectedAll = true;
-        }
-    }
+    // Select All
 
-    public function selectAllByCategory($categoryId, array $allSelected) {
-        $categoryId = (int) $categoryId;
+    // public function selectAll(array $allSelected) {
+    //     if($this->selectedAll) {
+    //         $this->selected = [];
+    //         $this->selectedAll = false;
+    //     } else {
+    //         $this->selected = $allSelected;
+    //         $this->selectedAll = true;
+    //     }
+    // }
 
-        // Initialize the category if it doesn't exist
-        if (!isset($this->selectedCategories[$categoryId])) {
-            $this->selectedCategories[$categoryId] = false;
-        }
+    // Select all by category
 
-        // Toggle the category selection status
-        $this->selectedCategories[$categoryId] = !$this->selectedCategories[$categoryId];
+    // public function selectAllByCategory($categoryId, array $allSelected) {
+    //     $categoryId = (int) $categoryId;
 
-        // If category is selected, add its items to selectedItems; otherwise, remove them
-        if($this->selectedCategories[$categoryId]) {
-            $this->selected = array_merge($this->selected, $allSelected);
-        } else {
-            $this->selected = array_values(array_diff($this->selected, $allSelected));
-        }
-    }
+    //     // Initialize the category if it doesn't exist
+    //     if (!isset($this->selectedCategories[$categoryId])) {
+    //         $this->selectedCategories[$categoryId] = false;
+    //     }
+
+    //     // Toggle the category selection status
+    //     $this->selectedCategories[$categoryId] = !$this->selectedCategories[$categoryId];
+
+    //     // If category is selected, add its items to selectedItems; otherwise, remove them
+    //     if($this->selectedCategories[$categoryId]) {
+    //         $this->selected = array_merge($this->selected, $allSelected);
+    //     } else {
+    //         $this->selected = array_values(array_diff($this->selected, $allSelected));
+    //     }
+    // }
 
     public function setView($view) {
+        $this->selected = [];
+        $this->selectedAll = false;
         $this->reset('search');
         $this->viewBy = $view;
     }
@@ -108,18 +114,4 @@ class SelectionListTable extends Component
             ->delete();
         $this->selected = [];
     }
-
-    // public function updatedSelectAll($value) {
-    //     $newArray = array_map('strval', json_decode($value));
-    //     $newArray = array_values($newArray);
-    //     $this->selectAll = $newArray;
-    //     $this->selected = $this->selectAll;
-    // }
-
-    // public function updatedSelectedAll($value) {
-    //     if($value == false) {
-    //         $this->selectAll = [];
-    //         $this->selected = [];
-    //     }
-    // }
 }
