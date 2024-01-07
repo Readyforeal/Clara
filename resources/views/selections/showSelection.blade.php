@@ -5,6 +5,42 @@
         </h2>
     </x-slot>
 
+    <div class="px-6">
+        {{-- Action zone --}}
+        <div>
+
+        </div>
+
+        {{-- Content --}}
+        <x-card>
+            <x-slot name="head">
+                <p>{{ $selection->name }}</p>
+            </x-slot>
+
+            <x-slot name="body">
+                @foreach($selection->items as $item)
+                    <p class="text-xl">{{ $item->name }}</p>
+
+                    @if(isset($item->item_number))
+                        <p class="text-xs">#{{ $item->item_number }}</p>
+                    @else
+                        <p class="text-xs">No item number</p>
+                    @endif
+
+                    @if(isset($item->supplier))
+                        <p class="text-xs">{{ $item->supplier }}</p>
+                    @else
+                        <p class="text-xs">No supplier</p>
+                    @endif
+
+                @endforeach
+
+                <p class="text-xs">Created: @datetime($selection->created_at)</p>
+                <p class="text-xs">Updated: {{ $selection->updated_at }}</p>
+            </x-slot>
+        </x-card>
+    </div>
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-3">

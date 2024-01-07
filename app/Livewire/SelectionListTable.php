@@ -24,7 +24,6 @@ class SelectionListTable extends Component
     //Visibility
     public $showBulkActions = false;
     public $showStagingModal = false;
-    public $showDeleteApprovalsModal = false;
     public $showDeleteModal = false;
 
     //Select rows
@@ -118,6 +117,7 @@ class SelectionListTable extends Component
         $this->viewBy = $view;
     }
 
+    // DEV NOTE: Will need to pass class / object type later on
     public function stageSelected() {
         $approvalStage = ApprovalStage::findOrFail($this->approvalStageId);
         foreach($this->selected as $selectionId) {
@@ -135,36 +135,10 @@ class SelectionListTable extends Component
                 $this->showBulkActions = false;
                 $this->showStagingModal = false;
 
-                session()->flash('message', ['type' => 'success', 'body' => 'Approval created successfully']);
+                session()->flash('message', ['type' => 'success', 'body' => 'Approvals created successfully']);
     
             } catch (\Illuminate\Database\QueryException $e) {
                 $this->showStagingModal = false;
-            }
-        }
-    }
-
-    public function deleteApprovals() {
-        $approvalStage = ApprovalStage::findOrFail($this->approvalStageId);
-        foreach($this->selected as $selectionId) {
-            try {
-                //Get the selection
-                $selection = Selection::findOrFail($selectionId);
-
-                //Get the approval for this stage
-                $approval = $selection->approvals()->where('approval_stage_id', $this->approvalStageId);
-
-                //Delete the approval
-                $approval->delete();
-
-                //Reset
-                $this->selected = [];
-                $this->showBulkActions = false;
-                $this->showDeleteApprovalsModal = false;
-
-                session()->flash('message', ['type' => 'success', 'body' => 'Approval created successfully']);
-
-            } catch (\Illuminate\Database\QueryException $e) {
-                $this->showDeleteApprovalsModal = false;
             }
         }
     }
@@ -174,5 +148,9 @@ class SelectionListTable extends Component
             ->whereIn('id', $this->selected)
             ->delete();
         $this->selected = [];
+        $this->showBulkActions = false;
+        $this->showDeleteModal = false;
+
+        session()->flash('message', ['type' => 'success', 'body' => 'Selections deleted successfully']);
     }
 }

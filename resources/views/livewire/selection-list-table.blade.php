@@ -27,7 +27,6 @@
                 @if($showBulkActions)
                     <div wire:transition class="p-2 absolute mt-2 bg-gray-50 border border-white rounded-xl shadow-xl">
                         <x-secondary-button wire:click="$toggle('showStagingModal')">Stage for Approval</x-secondary-button>
-                        <x-secondary-button wire:click="$toggle('showDeleteApprovalsModal')">Delete Approvals</x-secondary-button>
                         <x-secondary-button wire:click="$toggle('showDeleteModal')">Delete</x-secondary-button>
                     </div>
                 @endif
@@ -384,33 +383,25 @@
         </div>
     @endif
 
-    @if ($showDeleteApprovalsModal)
+    @if ($showDeleteModal)
         <div wire:transition.opacity class="fixed top-0 left-0 right-0 justify-center items-center w-full h-screen bg-gray-100/70 backdrop-blur-sm">
             <x-card class="relative mt-6 max-w-2xl mx-auto shadow-xl">
                 <x-slot name="head">
-                    <p>Delete Approvals</p>
+                    <p>Delete Selections</p>
                 </x-slot>
 
                 <x-slot name="body">
-                    <p>Select an approval stage</p>
-                    <x-select class="mt-1 w-full" wire:model.live="approvalStageId">
-                        <option hidden>Select stage</option>
-                        @foreach ($project->approvalStages as $approvalStage)
-                            <option value="{{ $approvalStage->id }}">{{ $approvalStage->name }}</option>
-                        @endforeach
-                    </x-select>
+                   <p>Are you sure you would like to delete these selections?</p>
                 </x-slot>
 
                 <x-slot name="foot">
-                    <x-secondary-button icon="xmark" wire:click="$toggle('showDeleteApprovalsModal')">
+                    <x-secondary-button icon="xmark" wire:click="$toggle('showStagingModal')">
                         Cancel
                     </x-secondary-button>
 
-                    @if ($approvalStageId)
-                    <x-button wire:transition icon="check" wire:click.prevent="deleteApprovals">
-                        Delete Approvals
+                    <x-button wire:transition icon="trash" wire:click.prevent="deleteSelected">
+                        Delete
                     </x-button>
-                    @endif
                 </x-slot>
             </x-card>
         </div>
