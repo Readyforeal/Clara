@@ -1,12 +1,6 @@
 <div>
     <div class="flex justify-between mb-3">
         <div>
-            @empty(!$selected)
-            <x-secondary-button wire:click="setView('all')">
-                <i class="fa fa-list-check"></i>
-            </x-secondary-button>
-            @endempty
-
             <x-input class="text-sm" type="text" name="search" wire:model.live.debounce.250ms="search"
             placeholder="Search {{
                 $viewBy
@@ -24,6 +18,22 @@
                 <i class="fa fa-location-dot"></i>
             </x-secondary-button>
 
+            @empty(!$selected)
+            <div class="inline-block">
+                <x-secondary-button-link icon="list-check" class="text-xs" wire:click.prevent="$toggle('showBulkActions')">
+                    Bulk Actions
+                </x-secondary-button-link>
+
+                @if($showBulkActions)
+                    <div wire:transition class="p-2 absolute mt-2 bg-gray-50 border border-white rounded-xl shadow-xl">
+                        <x-secondary-button wire:click="$toggle('showStagingModal')">Stage for Approval</x-secondary-button>
+                        <x-secondary-button wire:click="$toggle('showDeleteApprovalsModal')">Delete Approvals</x-secondary-button>
+                        <x-secondary-button wire:click="$toggle('showDeleteModal')">Delete</x-secondary-button>
+                    </div>
+                @endif
+            </div>
+            @endempty
+
             @if ($viewBy == 'categories')
                 <x-secondary-button-link icon="tag">
                     Manage Project Categories
@@ -38,7 +48,7 @@
 
     {{-- View all selections --}}
     @if ($viewBy == 'all')
-        <x-table class="mt-1 transition ease-in-out" wire:loading.class="opacity-50">
+        <x-table class="mt-1 transition ease-in-out" >
             
             {{-- Table head --}}
             
@@ -120,7 +130,7 @@
                                     {{ $approval->approvalStage->name }}
                                 </x-approval-badge>
                             @empty
-                                <span class="opacity-50">No open approvals</span>
+                                <span class="opacity-50">Unstaged</span>
                             @endforelse
                         </x-table.cell>
                     </x-table.row>
@@ -133,7 +143,7 @@
 
     @if ($viewBy == 'categories')
         @foreach ($categories as $category)
-            <x-table class="mt-1 mb-2 transition ease-in-out" wire:loading.class="opacity-50">
+            <x-table class="mt-1 mb-2 transition ease-in-out" >
                 <x-slot name="caption">
                     <span class="font-semibold">{{ $category->name }}</span>
                 </x-slot>
@@ -169,7 +179,7 @@
                         </x-table.cell>
 
                         <x-table.cell class="font-semibold w-1/5">
-                            <i class="fa fa-check mr-2"></i>
+                            <i class="fa fa-thumbs-up mr-2"></i>
                             Approval Status
                         </x-table.cell>
                     </x-table.row>
@@ -220,7 +230,7 @@
                                             {{ $approval->approvalStage->name }}
                                         </x-approval-badge>
                                     @empty
-                                        <span class="opacity-50">No open approvals</span>
+                                        <span class="opacity-50">Unstaged</span>
                                     @endforelse
                                 </x-table.cell>
                             </x-table.row>
@@ -241,7 +251,7 @@
 
     @if($viewBy == 'locations')
         @foreach ($locations as $location)
-            <x-table class="mt-1 mb-2">
+            <x-table class="mt-1 mb-2" >
                 <x-slot name="caption">
                     <span class="font-semibold">{{ $location->name }}</span>
                 </x-slot>
@@ -277,7 +287,7 @@
                         </x-table.cell>
 
                         <x-table.cell class="font-semibold w-1/5">
-                            <i class="fa fa-check mr-2"></i>
+                            <i class="fa fa-thumbs-up mr-2"></i>
                             Approval Status
                         </x-table.cell>
                     </x-table.row>
@@ -327,7 +337,7 @@
                                         {{ $approval->approvalStage->name }}
                                     </x-approval-badge>
                                 @empty
-                                    <span class="opacity-50">No open approvals</span>
+                                    <span class="opacity-50">Unstaged</span>
                                 @endforelse
                             </x-table.cell>
                         </x-table.row>
@@ -339,5 +349,70 @@
                 </x-slot>
             </x-table>
         @endforeach
+    @endif
+
+    {{-- Modals --}}
+    @if ($showStagingModal)
+        <div wire:transition.opacity class="fixed top-0 left-0 right-0 justify-center items-center w-full h-screen bg-gray-100/70 backdrop-blur-sm">
+            <x-card class="relative mt-6 max-w-2xl mx-auto shadow-xl">
+                <x-slot name="head">
+                    <p>Stage Selections</p>
+                </x-slot>
+
+                <x-slot name="body">
+                    <p>Select an approval stage</p>
+                    <x-select class="mt-1 w-full" wire:model.live="approvalStageId">
+                        <option hidden>Select stage</option>
+                        @foreach ($project->approvalStages as $approvalStage)
+                            <option value="{{ $approvalStage->id }}">{{ $approvalStage->name }}</option>
+                        @endforeach
+                    </x-select>
+                </x-slot>
+
+                <x-slot name="foot">
+                    <x-secondary-button icon="xmark" wire:click="$toggle('showStagingModal')">
+                        Cancel
+                    </x-secondary-button>
+
+                    @if ($approvalStageId)
+                    <x-button wire:transition icon="check" wire:click.prevent="stageSelected">
+                        Stage Selections
+                    </x-button>
+                    @endif
+                </x-slot>
+            </x-card>
+        </div>
+    @endif
+
+    @if ($showDeleteApprovalsModal)
+        <div wire:transition.opacity class="fixed top-0 left-0 right-0 justify-center items-center w-full h-screen bg-gray-100/70 backdrop-blur-sm">
+            <x-card class="relative mt-6 max-w-2xl mx-auto shadow-xl">
+                <x-slot name="head">
+                    <p>Delete Approvals</p>
+                </x-slot>
+
+                <x-slot name="body">
+                    <p>Select an approval stage</p>
+                    <x-select class="mt-1 w-full" wire:model.live="approvalStageId">
+                        <option hidden>Select stage</option>
+                        @foreach ($project->approvalStages as $approvalStage)
+                            <option value="{{ $approvalStage->id }}">{{ $approvalStage->name }}</option>
+                        @endforeach
+                    </x-select>
+                </x-slot>
+
+                <x-slot name="foot">
+                    <x-secondary-button icon="xmark" wire:click="$toggle('showDeleteApprovalsModal')">
+                        Cancel
+                    </x-secondary-button>
+
+                    @if ($approvalStageId)
+                    <x-button wire:transition icon="check" wire:click.prevent="deleteApprovals">
+                        Delete Approvals
+                    </x-button>
+                    @endif
+                </x-slot>
+            </x-card>
+        </div>
     @endif
 </div>

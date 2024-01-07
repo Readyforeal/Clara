@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\Approval;
+use App\Models\ApprovalStage;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Selection;
@@ -12,15 +14,23 @@ class SelectionListTable extends Component
 {
     use WithPagination;
 
-    public $search = '';
+    public $selectionListId;
+    public int $approvalStageId;
 
+    //Query
+    public $search = '';
     public $viewBy = 'all';
 
-    public $selectionListId;
+    //Visibility
+    public $showBulkActions = false;
+    public $showStagingModal = false;
+    public $showDeleteApprovalsModal = false;
+    public $showDeleteModal = false;
 
+    //Select rows
     public $selected = [];
-    public $selectedAll = false;
-    public $selectedCategories = [];
+    // public $selectedAll = false;
+    // public $selectedCategories = [];
 
     public function mount($selectionListId) {
         $this->selectionListId = $selectionListId;
@@ -103,9 +113,60 @@ class SelectionListTable extends Component
 
     public function setView($view) {
         $this->selected = [];
-        $this->selectedAll = false;
+        // $this->selectedAll = false;
         $this->reset('search');
         $this->viewBy = $view;
+    }
+
+    public function stageSelected() {
+        $approvalStage = ApprovalStage::findOrFail($this->approvalStageId);
+        foreach($this->selected as $selectionId) {
+            try {
+                //Create the approval
+                $approval = new Approval();
+                $approval->approvalStage()->associate($approvalStage);
+
+                //Get the selection
+                $selection = Selection::findOrFail($selectionId);
+                $selection->approvals()->save($approval);
+        
+                //Reset
+                $this->selected = [];
+                $this->showBulkActions = false;
+                $this->showStagingModal = false;
+
+                session()->flash('message', ['type' => 'success', 'body' => 'Approval created successfully']);
+    
+            } catch (\Illuminate\Database\QueryException $e) {
+                $this->showStagingModal = false;
+            }
+        }
+    }
+
+    public function deleteApprovals() {
+        $approvalStage = ApprovalStage::findOrFail($this->approvalStageId);
+        foreach($this->selected as $selectionId) {
+            try {
+                //Get the selection
+                $selection = Selection::findOrFail($selectionId);
+
+                //Get the approval for this stage
+                $approval = $selection->approvals()->where('approval_stage_id', $this->approvalStageId);
+
+                //Delete the approval
+                $approval->delete();
+
+                //Reset
+                $this->selected = [];
+                $this->showBulkActions = false;
+                $this->showDeleteApprovalsModal = false;
+
+                session()->flash('message', ['type' => 'success', 'body' => 'Approval created successfully']);
+
+            } catch (\Illuminate\Database\QueryException $e) {
+                $this->showDeleteApprovalsModal = false;
+            }
+        }
     }
 
     public function deleteSelected() {

@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-project-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl">
             <i class="fa fa-table-list mr-2"></i>Selection List
@@ -8,14 +8,15 @@
     <div class="max-w-2xl mx-auto">
         {{-- Action zone --}}
         <div>
-            <p class="text-xl font-semibold">Edit Selection List</p>
-            <x-secondary-button-link class="mt-2" icon="arrow-left" url="/selection-lists">
-            
-            </x-secondary-button-link>
+            <x-icon-button-link class="mt-2 text-2xl" icon="arrow-left" url="/selection-lists/{{ $selectionList->id }}" />
         </div>
 
-        <div class="mt-3 p-6 bg-white border border-gray-300 rounded-xl overflow-hidden">
-            <div>
+        <x-card class="mt-2">
+            <x-slot name="head">
+                <p>Edit Selection List</p>
+            </x-slot>
+
+            <x-slot name="body">
                 <p class="text-xs">Fields marked with * are required</p>
     
                 {{-- Make form into component --}}
@@ -40,21 +41,24 @@
                     </x-button>
                     
                 </form>
-            </div>
+            </x-slot>
+        </x-card>
 
-            <div class="mt-3">
-                <p class="text-xl font-semibold">Danger Zone</p>
+        <x-card class="mt-2">
+            <x-slot name="head">
+                <p>Danger Zone</p>
+            </x-slot>
 
+            <x-slot name="body">
                 <form action="/selection-lists/{{ $selectionList->id }}/delete" method="POST">
                     @csrf
                     @method('DELETE')
-                    <x-button class="mt-2"
-                        icon="trash"
-                    >
+                    <x-button icon="trash">
                         Delete
                     </x-button>
                 </form>
-            </div>
-        </div>
+            </x-slot>
+        </x-card>
+
     </div>
-</x-app-layout>
+</x-project-layout>

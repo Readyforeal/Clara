@@ -83,6 +83,7 @@
                 <div class="text-[11px] opacity-10 hover:opacity-100 transition ease-in-out">
                     <p><pre>roadmap: {{ json_encode(session('roadmap'), JSON_PRETTY_PRINT) }}</pre></p>
                     <p><pre>feature: {{ json_encode(session('feature'), JSON_PRETTY_PRINT) }}</pre></p>
+                    <p><pre>message: {{ json_encode(session('message'), JSON_PRETTY_PRINT) }}</pre></p>
                 </div>
                 <a href="https://github.com/Readyforeal/Clara" target="_blank" class="opacity-50 hover:opacity-100">Clara v{{ config('app.version') }}</a>
             </div>

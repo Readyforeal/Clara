@@ -13,7 +13,7 @@
     @endisset
 
     @isset($foot)
-    <div class="p-3">
+    <div class="p-3 w-full justify-between border-t border-gray-300">
         {{ $foot }}
     </div>
     @endisset
