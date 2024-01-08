@@ -25,7 +25,7 @@
                 @foreach ($selectionLists as $selectionList)
                 <a class="@if(!$loop->first) mt-2 @endif flex group justify-between border border-gray-300 rounded-md p-3 bg-white hover:bg-gray-100 opacity-70 hover:opacity-100 transition ease-in-out" href="/selection-lists/{{ $selectionList->id }}">
                     <span class="font-semibold">
-                        <i class="fa fa-table-list mr-2 group-hover:text-blue-500 transition ease-in-out"></i>
+                        <i class="fa fa-table-list mr-2 group-hover:text-blue-600 transition ease-in-out"></i>
                         {{ $selectionList->name }}
                     </span>
 

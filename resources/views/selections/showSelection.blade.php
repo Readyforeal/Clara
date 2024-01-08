@@ -7,34 +7,165 @@
 
     <div class="px-6">
         {{-- Action zone --}}
-        <div>
+        <div class="flex justify-between">
 
         </div>
 
         {{-- Content --}}
         <x-card>
-            <x-slot name="head">
-                <p>{{ $selection->name }}</p>
+            <x-slot name="body">
+                <div class="grid grid-cols-3">
+                    {{-- Left Panel --}}
+                    <div class="col-span-2 pr-3">
+                        <div>
+                            <p class="font-semibold text-xl">{{ $selection->name }}</p>
+                            <p>{{ $selection->description }}</p>
+                        </div>
+
+                        <div class="pt-2">
+                            <x-secondary-button-link icon="pen" url="/selections/{{ $selection->id }}/edit">Edit Selection</x-button-link>
+                            <x-button-link icon="add" url="/items/create">Add Item</x-button-link>
+                        </div>
+
+                        @if ($selection->items->count() > 1)
+                            <p class="mt-3"><i class="fa fa-circle-exclamation mr-2"></i>This selection contains multiple options. Please select.</p>
+                        @endif
+
+                        @foreach($selection->items as $item)
+                            <div class="p-3 mt-3 border border-white shadow hover:border-gray-300 rounded-xl transition ease-in-out group">
+            
+                                {{-- Item Name and Link --}}
+                                <div class="flex justify-between">
+                                    <div>
+                                        <p class="text-xs font-semibold">Item Name</p>
+                                        <a href="{{ isset($item->link) ? $item->link : '' }}" target="_blank" class="text-xl">{{ $item->name }}</a>
+                                    </div>
+                                    <div class="opacity-0 group-hover:opacity-100 transition ease-in-out">
+                                        <x-secondary-button-link url="/items/{{ $item->id }}/edit" icon="pen" />
+                                        <x-secondary-button-link icon="copy" />
+                                        <x-secondary-button-link icon="trash" />
+                                    </div>
+                                </div>
+            
+                                {{-- Item Number --}}
+                                <div class="mt-2">
+                                    <p class="text-xs font-semibold">Item Number</p>
+                                    @if(isset($item->item_number))
+                                        <p>#{{ $item->item_number }}</p>
+                                    @else
+                                        <p>No item number</p>
+                                    @endif
+                                </div>
+            
+                                {{-- Supplier --}}
+                                <div class="mt-2">
+                                    <p class="text-xs font-semibold">Supplier</p>
+                                @if(isset($item->supplier))
+                                    <p>{{ $item->supplier }}</p>
+                                @else
+                                    <p>No supplier</p>
+                                @endif
+                                </div>
+            
+                                {{-- Dimensions --}}
+                                <div class="mt-2">
+                                    <p class="text-xs font-semibold">Dimensions</p>
+                                    @if(isset($item->dimensions))
+                                        <p>{{ $item->dimensions }}</p>
+                                    @else
+                                        <p>No dimensions</p>
+                                    @endif
+                                </div>
+            
+                                {{-- Color --}}
+                                <div class="mt-2">
+                                    <p class="text-xs font-semibold">Color</p>
+                                    @if(isset($item->color))
+                                        <p>{{ $item->color }}</p>
+                                    @else
+                                        <p>No color</p>
+                                    @endif
+                                </div>
+                            </div>
+        
+                        @endforeach
+                    </div>
+
+                    {{-- Right Panel --}}
+                    <div class="col-span-1">
+                        <x-card class="mb-3">
+
+                            <x-slot name="head">
+                                <p class="font-semibold mt-1">Approvals</p>
+                                <x-button icon="list-check">Stage for Approval</x-button>
+                            </x-slot>
+
+                            <x-slot name="body">
+                                @forelse ($selection->approvals as $approval)
+                                    <x-card class="mt-2 {{ ($approval->status == 'Pending') ? 'bg-yellow-100' : (($approval->status == 'Approved') ? 'bg-green-100' : 'bg-red-100') }}">
+                                        <x-slot name="head">
+                                            <p class="mt-1">{{ $approval->approvalStage->name }}</p>
+                                            <form action="/selections/approvals/{{ $approval->id }}/delete" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <x-button class="p-1" icon="trash" />
+                                            </form>
+                                        </x-slot>
+    
+                                        <x-slot name="body">
+                                            <div class="flex justify-between">
+                                                <p class="mt-1 font-semibold">{{ $approval->status }}</p>
+                                                <div class="flex space-x-1">
+                                                    <form action="/approvals/{{ $approval->id }}/update-approval-status" method="POST">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <x-input type="hidden" name="approval_id" value="{{ $approval->id }}" />
+                                                        <x-input type="hidden" name="status" value="Approved" />
+                                                        <x-button icon="thumbs-up" color="green" />
+                                                    </form>
+                                                    <form action="/approvals/{{ $approval->id }}/update-approval-status" method="POST">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <x-input type="hidden" name="approval_id" value="{{ $approval->id }}" />
+                                                        <x-input type="hidden" name="status" value="Pending" />
+                                                        <x-button icon="hourglass" color="yellow" />
+                                                    </form>
+                                                    <form action="/approvals/{{ $approval->id }}/update-approval-status" method="POST">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <x-input type="hidden" name="approval_id" value="{{ $approval->id }}" />
+                                                        <x-input type="hidden" name="status" value="Denied" />
+                                                        <x-button icon="thumbs-down" color="red" />
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </x-slot>
+                                    </x-card>
+                                @empty
+                                    <p class="text-xs">No approvals open</p>
+                                @endforelse
+                            </x-slot>
+                        </x-card>
+
+                        <x-card class="mb-3">
+                            <x-slot name="head">
+                                <p class="font-semibold mt-1">Locations</p>
+                                <x-button icon="location-pin">Locate</x-button>
+                            </x-slot>
+
+                            <x-slot name="body">
+                                @foreach ($selection->locations as $location)
+                                    <div class="inline-flex py-1 px-2 text-xs bg-blue-100 border border-blue-600 text-blue-600 rounded-xl">
+                                        <span class="font-semibold">{{ $location->name }}</span>
+                                    </div>
+                                @endforeach
+                            </x-slot>
+                        </x-card>
+                    </div>
+                </div>
             </x-slot>
 
-            <x-slot name="body">
-                @foreach($selection->items as $item)
-                    <p class="text-xl">{{ $item->name }}</p>
-
-                    @if(isset($item->item_number))
-                        <p class="text-xs">#{{ $item->item_number }}</p>
-                    @else
-                        <p class="text-xs">No item number</p>
-                    @endif
-
-                    @if(isset($item->supplier))
-                        <p class="text-xs">{{ $item->supplier }}</p>
-                    @else
-                        <p class="text-xs">No supplier</p>
-                    @endif
-
-                @endforeach
-
+            <x-slot name="foot">
                 <p class="text-xs">Created: @datetime($selection->created_at)</p>
                 <p class="text-xs">Updated: {{ $selection->updated_at }}</p>
             </x-slot>
@@ -60,7 +191,7 @@
                         </x-select>
                     </div>
 
-                    <x-button class="mt-2" icon="list-check" color="blue">Stage for Approval</x-button>
+                    <x-button class="mt-2" icon="list-check">Stage for Approval</x-button>
                 </form>
 
                 @foreach ($selection->approvals as $approval)

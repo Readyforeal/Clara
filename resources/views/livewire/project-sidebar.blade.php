@@ -4,7 +4,7 @@
             {{-- Project information --}}
             <div class="px-6 mt-6">
                 <div class="pb-6">
-                    <p class="text-2xl font-semibold text-blue-500">Clara</p>
+                    <p class="text-2xl font-semibold text-blue-600">Clara</p>
                 </div>
                 <p class="text-2xl font-semibold mb-2">{{ $project->name }}</p>
                 <p class="text-xs font-semibold opacity-50">{{ $project->street }}</p>
@@ -80,11 +80,11 @@
             </div>
 
             <div class="flex-none p-3">
-                <div class="text-[11px] opacity-10 hover:opacity-100 transition ease-in-out">
+                {{-- <div class="text-[11px] opacity-10 hover:opacity-100 transition ease-in-out">
                     <p><pre>roadmap: {{ json_encode(session('roadmap'), JSON_PRETTY_PRINT) }}</pre></p>
                     <p><pre>feature: {{ json_encode(session('feature'), JSON_PRETTY_PRINT) }}</pre></p>
                     <p><pre>message: {{ json_encode(session('message'), JSON_PRETTY_PRINT) }}</pre></p>
-                </div>
+                </div> --}}
                 <a href="https://github.com/Readyforeal/Clara" target="_blank" class="opacity-50 hover:opacity-100">Clara v{{ config('app.version') }}</a>
             </div>
         </div>
